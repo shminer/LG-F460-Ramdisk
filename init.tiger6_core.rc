@@ -1,0 +1,189 @@
+# Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of Code Aurora nor
+#       the names of its contributors may be used to endorse or promote
+#       products derived from this software without specific prior written
+#       permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NON-INFRINGEMENT ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+import /init.tiger6_product.rc
+
+# modem logging (LGODM)
+import /init.lge.modem_log.rc
+
+on fs
+    mount_all fstab.tiger6
+
+    # Keeping following partitions outside fstab file. As user may not have
+    # these partition flashed on the device. Failure to mount any partition in fstab file
+    # results in failure to launch late-start class.
+
+	# Executing tune2fs to reserve some region in /data. (40MB)
+	exec /system/bin/tune2fs -u system -r 10240 /dev/block/bootdevice/by-name/userdata
+
+    wait /dev/block/bootdevice/by-name/cache
+    exec /system/bin/e2fsck -y /dev/block/bootdevice/by-name/cache
+    mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev noatime barrier=1 errors=continue
+
+    wait /dev/block/bootdevice/by-name/persist
+    exec /system/bin/e2fsck -y /dev/block/bootdevice/by-name/persist
+    mount ext4 /dev/block/bootdevice/by-name/persist /persist nosuid nodev barrier=1
+    restorecon_recursive /persist
+    mkdir /persist/data 0700 system system
+    mkdir /persist/data/sfs 0700 system system
+    mkdir /persist/data/tz 0700 system system
+
+    wait /dev/block/bootdevice/by-name/modem
+    #mount vfat /dev/block/bootdevice/by-name/modem /firmware ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0
+    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    # create mount point for LG Specific functions
+    mkdir /sns 0755 system system
+    mkdir /persist-lg 0755 system system
+    mkdir /mpt 0755 system system
+
+    wait /dev/block/bootdevice/by-name/sns
+    exec /system/bin/e2fsck -y /dev/block/bootdevice/by-name/sns
+    mount ext4 /dev/block/bootdevice/by-name/sns /sns nosuid nodev barrier=1 noatime noauto_da_alloc errors=continue
+
+    wait /dev/block/bootdevice/by-name/drm
+    exec /system/bin/e2fsck -y /dev/block/bootdevice/by-name/drm
+    mount ext4 /dev/block/bootdevice/by-name/drm /persist-lg nosuid nodev barrier=1 noatime noauto_da_alloc errors=continue
+
+    wait /dev/block/bootdevice/by-name/mpt
+    exec /system/bin/e2fsck -y /dev/block/bootdevice/by-name/mpt
+    mount ext4 /dev/block/bootdevice/by-name/mpt /mpt nodev nosuid barrier=1 noatime noauto_da_alloc errors=continue
+
+    restorecon_recursive /sns
+    restorecon_recursive /persist-lg
+    restorecon_recursive /mpt
+    restorecon_recursive /persist
+
+# LGE_CHANGE_START, 2014/12/09, T6-BSP-TS@lge.com
+	mkdir /sns/cal/ 0644 system system
+# LGE_CHANGE_END
+
+on post-fs-data
+    chown system system /mpt
+    chmod 0775 /mpt
+
+# LGE_CHANGE_START, 2014/12/16, T6-BSP-Filesystem@lge.com
+    write /proc/sys/vm/highmem_is_dirtyable 1
+# LGE_CHANGE_END
+
+on boot
+    # enable exfat feature
+    insmod /system/lib/modules/texfat.ko
+
+#Emotional LED
+   chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/blink_patterns
+   chmod 0664 /sys/devices/virtual/lg_rgb_led/use_patterns/blink_patterns
+   chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/input_patterns
+   chmod 0664 /sys/devices/virtual/lg_rgb_led/use_patterns/input_patterns
+   chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/onoff_patterns
+   chmod 0664 /sys/devices/virtual/lg_rgb_led/use_patterns/onoff_patterns
+   chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/setting
+   chmod 0664 /sys/devices/virtual/lg_rgb_led/use_patterns/setting
+   write /sys/devices/virtual/lg_rgb_led/use_patterns/setting 1
+
+#Touch_Knock_on
+   chown system system /sys/devices/virtual/input/lge_touch/lpwg_data
+   chmod 664 /sys/devices/virtual/input/lge_touch/lpwg_data
+   chown system system /sys/devices/virtual/input/lge_touch/lpwg_notify
+   chmod 664 /sys/devices/virtual/input/lge_touch/lpwg_notify
+   chown system system /sys/devices/virtual/input/lge_touch/incoming_call
+   chmod 664 /sys/devices/virtual/input/lge_touch/incoming_call
+   chown system lgkeyguard /sys/devices/virtual/input/lge_touch/keyguard
+   chmod 664 /sys/devices/virtual/input/lge_touch/keyguard
+   chown system system /sys/devices/virtual/input/lge_touch/ime_status
+   chmod 664 /sys/devices/virtual/input/lge_touch/ime_status
+   chown system system /sys/devices/virtual/input/lge_touch/quick_cover_status
+   chmod 664 /sys/devices/virtual/input/lge_touch/quick_cover_status
+   chown system system /sys/devices/virtual/input/lge_touch/ts_noise_log_enable
+   chmod 664 /sys/devices/virtual/input/lge_touch/ts_noise_log_enable
+   chown system system /sys/devices/virtual/input/lge_touch/ts_noise
+   chmod 664 /sys/devices/virtual/input/lge_touch/ts_noise
+
+#[START]LGE_CHANGE, T6-BSP-FileSystem@lge.com
+   lge_chcon_recursive /data/property u:object_r:property_data_file:s0
+   lge_chcon_recursive /data/security u:object_r:security_file:s0
+   start chcon_keystore
+#[END]LGE_CHANGE, T6-BSP-FileSystem@lge.com
+
+# Begin Immersion changes
+service immvibed /system/bin/immvibed
+    class main
+    user shell
+    group shell system
+    oneshot
+# End Immersion changes
+
+# Broadcast Service[START] [seongeun.jin@lge.com]
+service broadcast /system/bin/libbroadcast_server
+    class main
+    user media
+    group system audio media graphics sdcard_rw
+on property:init.svc.media=restarting
+    restart broadcast
+# Broadcast Service[END]  [seongeun.jin@lge.com]
+
+service rctd /system/bin/rctd
+    class late_start
+    user root
+    group root
+
+#LGE_CHANGE_S, restart qcamerasvr when restarting mediaserver and servicemanager, yousung.kang@lge.com
+on property:init.svc.media=restarting
+    restart qcamerasvr
+on property:init.svc.servicemanager=restarting
+    restart qcamerasvr
+#LGE_CHANGE_E, restart qcamerasvr when restarting mediaserver and servicemanager, yousung.kang@lge.com
+
+#LGE_CHANGE_S, MOCA, donggee.im@lge.com
+service moca_service /system/bin/advanced_moca -s
+    class late_start
+    user root
+    group system sdcard_r sdcard_rw radio
+    disabled
+    oneshot
+    socket Full.MOCA.port stream 660 system system
+
+on property:persist.service.moca.enable=1
+   start moca_service
+
+service moca_service_disable /system/bin/advanced_moca -k
+    class late_start
+    user root
+    group system sdcard_r sdcard_rw radio
+    disabled
+    oneshot
+
+on property:persist.service.moca.enable=0
+   start moca_service_disable
+#LGE_CHANGE_E, MOCA, donggee.im@lge.com
+
+#[START]LGE_CHANGE, T6-BSP-FileSystem@lge.com
+service chcon_keystore /system/bin/sh /system/etc/init.tiger6_chcon_keystore.sh
+    disabled
+    oneshot
+    seclabel u:r:keystore:s0
+#[END]LGE_CHANGE, T6-BSP-FileSystem@lge.com

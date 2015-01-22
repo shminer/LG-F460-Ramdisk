@@ -1,0 +1,48 @@
+## Be careful to use "exec" command.
+## If you execute a non-existing file, an additional init process can be created!
+# [LGE_DATA][LGP_DATA_TCPIP_NSRM][START]
+on boot
+   setprop lg.data.nsrm.policypath /data/connectivity/nsrm/NsrmConfiguration.xml
+   chmod 0644 /persist/init.cne.rc
+   mkdir /data/connectivity 0775 system system
+   mkdir /data/connectivity/nsrm 0775 system system
+# [LGE_DATA][LGP_DATA_TCPIP_NSRM][END]
+
+on post-fs-data
+    # SKT PM Service [Start]
+    mkdir /data/playready 0777 system system
+    chown system system /data/playready
+    chmod 0777 /data/playready
+	restorecon /data/playready
+    mkdir /data/pmsc 0777 system system
+    chown system system /data/pmsc
+    chmod 0777/data/pmsc
+    copy /system/skt/pmservice_cert/bgroupcert.dat /data/pmsc/bgroupcert.dat
+    copy /system/skt/pmservice_cert/devcerttemplate.dat /data/pmsc/devcerttemplate.dat
+    copy /system/skt/pmservice_cert/priv.dat /data/pmsc/priv.dat
+    copy /system/skt/pmservice_cert/zgpriv.dat /data/pmsc/zgpriv.dat
+    chown system system /data/pmsc/bgroupcert.dat
+    chown system system /data/pmsc/devcerttemplate.dat
+    chown system system /data/pmsc/priv.dat
+    chown system system /data/pmsc/zgpriv.dat
+    chmod 0444 /data/pmsc/bgroupcert.dat
+    chmod 0444 /data/pmsc/devcerttemplate.dat
+    chmod 0444 /data/pmsc/priv.dat
+    chmod 0444 /data/pmsc/zgpriv.dat
+    # SKT PM Service [End]
+
+#20130830 TBasePlatform yung.im@lge.com [START] -----------------------
+    chown wifi wifi /system/lib/libiwlan_module.so
+    chmod 0644 /system/lib/libiwlan_module.so
+    chmod 0755 /system/bin/tbased
+    mkdir /data/tbased
+    chown wifi wifi /data/tbased
+    chmod 0775 /data/tbased
+
+service tbased /system/bin/tbased -F
+    class late_start
+    user root
+    group wifi inet radio system
+    oneshot
+#20130830 TBasePlatform yung.im@lge.com [END] -----------------------
+

@@ -1,0 +1,181 @@
+# This file is imported by init.{ro.hardware}.rc
+
+# to override this file (device specific .rc)
+import /init.${ro.hardware}_core.rc
+
+on init
+    # Mount pstore file system on /mnt/pstore
+    mkdir /mnt/pstore 660 system system
+    mount pstore /mnt/pstore /mnt/pstore
+    #Immersion
+    export VIBE_PIPE_PATH /dev/pipes
+    mkdir /dev/pipes 0771 shell shell
+    setprop ro.ssbd.session /dev/block/bootdevice/by-name/eksst
+    setprop ro.ssbd.offset 0
+
+on post-fs
+    # execute sreadahead daemon to reduce boot-time
+    start sreadahead
+    start qcom-sh
+
+    # ramoops backup function start service
+    start ramoops_backup
+
+# execute sreadahead daemon to reduce boot-time
+service sreadahead /sbin/treadahead
+    oneshot
+    disabled
+    seclabel u:r:sreadahead:s0
+# ramoops backup function service
+service ramoops_backup /system/bin/sh /system/etc/ramoops_backup.sh
+	class main
+	disabled
+	oneshot
+
+# enable & disable crash handler, rtb & trace event through property
+service service-crash /system/bin/sh /init.tigerf.crash.sh
+	class main
+	disabled
+	oneshot
+
+on property:persist.service.crash.enable=1
+	restart service-crash
+
+on property:persist.service.crash.enable=0
+	restart service-crash
+
+# kyeongsu.jang@lge.com 2014.05.15 add Advanced Crash Handler Switch
+on property:persist.service.ach.enable=1
+	write /sys/module/lge_handle_panic/parameters/ach_enable "1"
+
+on property:persist.service.ach.enable=0
+	write /sys/module/lge_handle_panic/parameters/ach_enable "0"
+
+# make a diecision whether sreadahead would be performed or not
+service sreadahead-check /sbin/sreadahead_check
+    class main
+    user root
+    group root
+    oneshot
+    seclabel u:r:sreadahead-check:s0
+# ramoops backup function service
+service ramoops_backup /system/bin/sh /system/etc/ramoops_backup.sh
+    class main
+    disabled
+    oneshot
+
+# start sensor daemon as main class and by vold.post_fs_data_done [START]
+on post-fs-data
+    # make directory for sns.reg used by sensordaemon
+    mkdir -p /sns/cal 644 system system
+
+service lge-sensor-sh /system/bin/sh /init.tigerf.sensor.sh
+    class main
+    user root
+    oneshot
+
+on property:vold.post_fs_data_done=1
+    start lge-sensor-sh
+# start sensor daemon as main class and by vold.post_fs_data_done [END]
+
+on chargerlogo
+    start log-kernel
+    stop bootlogo
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 1004
+    write /sys/class/android_usb/android0/idProduct 6300
+    write /sys/class/android_usb/android0/bDeviceClass 0
+    write /sys/class/android_usb/android0/bDeviceSubClass 0
+    write /sys/class/android_usb/android0/bDeviceProtocol 0
+    write /sys/class/android_usb/android0/functions charge_only
+    write /sys/class/android_usb/android0/enable 1
+    exec /sbin/chargerlogo
+
+# write eventlog for boot animation end
+service write_event_log /system/bin/write_event_log 55000
+    user system
+    group system
+    disabled
+    oneshot
+
+on property:init.svc.bootanim=stopped
+    start write_event_log
+    write /sys/devices/f9927000.i2c/i2c-2/2-0072/enable_irq 1
+
+on boot
+    chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill1/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill1/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill2/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill2/state
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/btwake
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/proto
+#   chown bluetooth bluetooth /sys/module/hci_uart/parameters/ath_lpm
+#   chown bluetooth bluetooth /sys/module/hci_uart/parameters/ath_btwrite
+#   chown system system /sys/module/sco/parameters/disable_esco
+#   chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
+#   chmod 0660 /sys/module/bluetooth_power/parameters/power
+#   chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
+    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chmod 0660 /sys/class/rfkill/rfkill1/state
+    chmod 0660 /sys/class/rfkill/rfkill2/state
+    chmod 0660 /proc/bluetooth/sleep/proto
+    chmod 0660 /proc/bluetooth/sleep/btwake
+    chown bluetooth net_bt_stack /dev/ttyHS99
+#   chmod 0660 /sys/module/hci_uart/parameters/ath_lpm
+#   chmod 0660 /sys/module/hci_uart/parameters/ath_btwrite
+    chmod 0660 /dev/ttyHS99
+#   chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
+#   chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
+
+#   chmod 0660 /dev/ttyHS2
+#   chown bluetooth bluetooth /dev/ttyHS2
+
+    setprop bluetooth.chip.vendor brcm
+
+#BT_S : [PSIX-5377]BDADDR_LOADER
+service bdaddr_loader /system/bin/bdaddr_loader
+    user root
+    group bluetooth net_bt_admin misc net_bt_stack
+    disabled
+    oneshot
+#BT_E : [PSIX-5377]BDADDR_LOADER
+
+#LGE_PM_BSP_POWER
+service gbmonitor /system/bin/gbmonitor
+    class main
+    socket gbm-client stream 660 system system
+    user system
+    group system
+
+service atd /system/bin/atd /dev/ttyGS0 /dev/hsic0
+    socket atd stream 0660 system inet
+    class main
+
+service mtsd /system/bin/mtsd
+    class late_start
+    oneshot
+    socket mtsd.port stream 660 system system
+
+# TestMode Daemon for broadcom driver
+service diagd /system/bin/diagd
+    class late_start
+    user root
+    group radio system
+    disabled
+    oneshot
+    socket lsock_diagd stream 666
+
+on property:wifi_ftm.diagd_start=1
+    start diagd
+
+on property:wifi_ftm.diagd_start=0
+    stop diagd
+
+service bnrd /system/bin/bnrd
+    class main
+    socket bnrd stream 660 root system
+    user root
+    group system radio sdcard_rw
