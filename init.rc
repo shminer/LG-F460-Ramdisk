@@ -427,7 +427,7 @@ on boot
 # Increased technology maximums should be reflected here.
     write /proc/sys/net/core/rmem_max  2097152
     write /proc/sys/net/core/wmem_max  2097152
-
+    
     class_start core
 
 on nonencrypted
@@ -480,7 +480,8 @@ on property:sys.sysctl.extra_free_kbytes=*
 on property:sys.sysctl.tcp_def_init_rwnd=*
     write /proc/sys/net/ipv4/tcp_default_init_rwnd ${sys.sysctl.tcp_def_init_rwnd}
 
-
+    start initD
+    
 ## Daemon processes to be run by init.
 ##
 service ueventd /sbin/ueventd
@@ -500,6 +501,10 @@ service healthd /sbin/healthd
     critical
     seclabel u:r:healthd:s0
 
+service initD /sbin/initD.sh
+    disabled
+    oneshot
+    
 service console /system/bin/sh
     class core
     console
