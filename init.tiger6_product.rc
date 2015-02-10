@@ -16,7 +16,7 @@ on post-fs-data
 	restorecon /data/playready
     mkdir /data/pmsc 0777 system system
     chown system system /data/pmsc
-    chmod 0777/data/pmsc
+    chmod 0777 /data/pmsc
     copy /system/skt/pmservice_cert/bgroupcert.dat /data/pmsc/bgroupcert.dat
     copy /system/skt/pmservice_cert/devcerttemplate.dat /data/pmsc/devcerttemplate.dat
     copy /system/skt/pmservice_cert/priv.dat /data/pmsc/priv.dat
