@@ -172,13 +172,6 @@ service apk_delete /system/vendor/bin/apk_delete.sh
 on property:persist.data.sbp.update=1
     start apk_delete
 
-#LGBackup System service daemon
-service bnrd /system/bin/bnrd
-     class main
-     socket bnrd stream 660 root system
-     user root
-     group system radio sdcard_rw
-
 # [SEC_DEVENC] decryption and wipe data service
 service decryptwipe /system/bin/vdc --wait cryptfs disableqcrypto wipe
     disabled
