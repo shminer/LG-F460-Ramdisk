@@ -58,11 +58,6 @@ service sreadahead-check /sbin/sreadahead_check
     group root
     oneshot
     seclabel u:r:sreadahead-check:s0
-# ramoops backup function service
-service ramoops_backup /system/bin/sh /system/etc/ramoops_backup.sh
-    class main
-    disabled
-    oneshot
 
 # start sensor daemon as main class and by vold.post_fs_data_done [START]
 on post-fs-data
