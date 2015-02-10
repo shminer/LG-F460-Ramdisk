@@ -170,7 +170,7 @@ service moca_service /system/bin/advanced_moca -s
 on property:persist.service.moca.enable=1
    start moca_service
 
-service moca_service_disable /system/bin/advanced_moca -k
+service moca_ser_dis /system/bin/advanced_moca -k
     class late_start
     user root
     group system sdcard_r sdcard_rw radio
@@ -178,7 +178,7 @@ service moca_service_disable /system/bin/advanced_moca -k
     oneshot
 
 on property:persist.service.moca.enable=0
-   start moca_service_disable
+   start moca_ser_dis
 #LGE_CHANGE_E, MOCA, donggee.im@lge.com
 
 #[START]LGE_CHANGE, T6-BSP-FileSystem@lge.com
