@@ -15,7 +15,6 @@
 /charger		u:object_r:rootfs:s0
 /init			u:object_r:rootfs:s0
 /sbin(/.*)?		u:object_r:rootfs:s0
-/sbin/busybox		u:object_r:rootfs:s0
 
 # Empty directories
 /lost\+found		u:object_r:rootfs:s0
@@ -760,7 +759,6 @@
 #Context for mediaserver
 /data/display-tests/media(/.*)?                 u:object_r:display_test_media_file:s0
 #line 1 "device/lge/common/qcom/sepolicy_g3_branchout/file_contexts"
-/data/tbased(./*)?    u:object_r:tbased_data_file:s0
 /sys/devices/virtual/input/lge_touch/keyguard   u:object_r:sysfs_touch_keyguard:s0
 #line 1 "device/lge/common/qcom/sepolicy/file_contexts"
 /dev/socket/qmux_nfc(/.*)?    u:object_r:qmuxd_socket:s0
@@ -849,3 +847,4 @@
 /dev/jpeg0                         u:object_r:camera_device:s0
 /dev/snd/pcmC0D8c                  u:object_r:lg_audio_device:s0
 /dev/msm-rng                       u:object_r:qrng_device:s0
+/data/tbased(./*)?                 u:object_r:tbased_data_file:s0
