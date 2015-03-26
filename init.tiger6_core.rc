@@ -92,7 +92,9 @@ on post-fs-data
 
 on boot
     # enable exfat feature
-    insmod /system/lib/modules/exfat.ko
+    # insmod /system/lib/modules/exfat.ko
+    # now,we use Texfat.ko form autobuild.tuxera.com
+    insmod /system/lib/modules/texfat.ko
 
 #Emotional LED
    chown system system /sys/devices/virtual/lg_rgb_led/use_patterns/blink_patterns
