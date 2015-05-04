@@ -31,6 +31,12 @@ import /init.tiger6_product.rc
 import /init.lge.modem_log.rc
 
 on fs
+    # auto mount ext4 or f2fs
+    chmod 0777 /sbin/fstab_mount/data_system.sh
+    wait /dev/block/platform/msm_sdcc.1/by-name/system
+    wait /dev/block/platform/msm_sdcc.1/by-name/userdata
+    exec /sbin/fstab_mount/data_system.sh
+
     mount_all fstab.tiger6
 
     # Keeping following partitions outside fstab file. As user may not have
@@ -41,8 +47,12 @@ on fs
 	exec /system/bin/tune2fs -u system -r 10240 /dev/block/bootdevice/by-name/userdata
 
     wait /dev/block/bootdevice/by-name/cache
-    exec /system/bin/e2fsck -y /dev/block/bootdevice/by-name/cache
-    mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev noatime barrier=1 errors=continue
+    #exec /system/bin/e2fsck -y /dev/block/bootdevice/by-name/cache
+    #mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev noatime barrier=1 errors=continue
+
+    # Auto mount cache for f2fs
+    chmod 0777 sbin/fstab_mount/cache.sh
+    exec sbin/fstab_mount/cache.sh
 
     wait /dev/block/bootdevice/by-name/persist
     exec /system/bin/e2fsck -y /dev/block/bootdevice/by-name/persist
