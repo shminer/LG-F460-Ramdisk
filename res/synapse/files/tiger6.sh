@@ -16,6 +16,15 @@ case "$1" in
 	;;
 	DebugPVS)
 		$BB echo "ACPU PVS";
+	;;	
+	Thermalzone)
+		z0=`cat /sys/class/thermal/thermal_zone0/temp`;
+		z5=`cat /sys/class/thermal/thermal_zone5/temp`;
+		z6=`cat /sys/class/thermal/thermal_zone6/temp`;
+		z7=`cat /sys/class/thermal/thermal_zone7/temp`;
+		z8=`cat /sys/class/thermal/thermal_zone8/temp`;
+		tztemp="`$BB printf "%50s°C\n" "SOC0(0):${z0}" @n"CPU0(5):${z5}" @n"CPU1(6):${z6}" @n"CPU2(7):${z7}" @n"CPU3(8):${z8}" `";
+		$BB echo "${tztemp}";
 	;;
 	DebugSPEED)
 		$BB echo "SPEED BIN";

@@ -39,24 +39,13 @@ echo 1 > /sys/module/msm_pm/modes/cpu0/retention/idle_enabled
 echo 1 > /sys/module/msm_pm/modes/cpu1/retention/idle_enabled
 echo 1 > /sys/module/msm_pm/modes/cpu2/retention/idle_enabled
 echo 1 > /sys/module/msm_pm/modes/cpu3/retention/idle_enabled
-echo 0 > /sys/module/msm_thermal/core_control/enabled
-if [ "1" == "$battery_present" ]; then
-	echo 1 > /sys/devices/system/cpu/cpu1/online
-	echo 1 > /sys/devices/system/cpu/cpu2/online
-	echo 1 > /sys/devices/system/cpu/cpu3/online
-else
-	echo 1 > /sys/devices/system/cpu/cpu1/online
-	echo 1 > /sys/devices/system/cpu/cpu2/online
-	echo 0 > /sys/devices/system/cpu/cpu3/online
-fi
-#for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
-#do
-   # echo "cpubw_hwmon" > $devfreq_gov
-#done
-echo "impulse" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo "impulse" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-echo "impulse" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
-echo "impulse" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
+echo 1 > /sys/devices/system/cpu/cpu1/online
+echo 1 > /sys/devices/system/cpu/cpu2/online
+echo 1 > /sys/devices/system/cpu/cpu3/online
+echo "alucard" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+echo "alucard" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
+echo "alucard" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+echo "alucard" > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor
 echo 120 > /sys/module/cpu_boost/parameters/boost_ms
 echo 1497600 > /sys/module/cpu_boost/parameters/sync_threshold
 echo 1497600 > /sys/module/cpu_boost/parameters/input_boost_freq
@@ -67,7 +56,6 @@ echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
 echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
 echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
 echo 1 > /sys/module/msm_thermal/core_control/enabled
-setprop ro.qualcomm.perf.cores_online 2
 chown -h  system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 chown -h root.system /sys/devices/system/cpu/mfreq
@@ -84,9 +72,6 @@ chmod 666 /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/*_f
 echo "100000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/min_freq
 echo "683000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/max_freq
 start gbmonitor
-stop thermal-engine
-sleep 1s
-start thermal-engine
 
 CGROUP_ROOT=/dev/cpuctl
 mkdir $CGROUP_ROOT/native

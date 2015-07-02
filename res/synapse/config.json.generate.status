@@ -2,20 +2,20 @@
 
 cat << CTAG
 {
-	name:STATUS,
+	name:状态,
 		elements:[
 			{ SLiveLabel:{
-				title:"Battery Temperature:",
+				title:"电池温度:",
 				refresh:3000,
 				action:"live BatteryTemperature"
 			}},
 			{ SLiveLabel:{
-				title:"CPU Temperature:",
+				title:"CPU 温度:",
 				refresh:3000,
 				action:"live CPUTemperature"
 			}},
 			{ SLiveLabel:{
-				title:"Memory:",
+				title:"内存状况:",
 				refresh:3000,
 				action:"live Memory"
 			}},
