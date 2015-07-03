@@ -169,8 +169,7 @@ if [ ! -e /jz_tune ]; then
 	$BB chmod -R 777 /jz_tune;
 	$BB ln -s /sys/devices/system/cpu/cpu0/cpufreq/ /jz_tune/cpufreq;
 	$BB ln -s /sys/module/msm_thermal/parameters/ /jz_tune/thermal;
-	$BB ln -s /sys/kernel/alucard_hotplug/ /jz_tune/hotplugs/alucard;
-	$BB ln -s /sys/kernel/msm_mdpecision/ /hotplugs/bricked;
+	$BB ln -s /sys/kernel/alucard_hotplug/ /jz_tune/alucard;
 fi;
 
 
