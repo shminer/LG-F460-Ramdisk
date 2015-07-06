@@ -6,7 +6,7 @@ on post-fs
     chown system system /persist-lg
     chmod 0771 /persist-lg
     #CAPP_SECUREBOOT
-    exec /sbin/wallpaper -ap
+    #exec /sbin/wallpaper -ap
 
 on post-fs-data
     #CAPP_FONTS
