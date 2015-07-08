@@ -34,21 +34,6 @@ if [ ! -f $UCI_CONFIG ]; then
 	$BB mount -t rootfs -o rw,remount rootfs;
 	$BB chmod -R 755 $UCI_ACTION;
 
-	if [ ! -f $DEBUG/pvs_bin ]; then
-		PVS=`$BB dmesg | $BB grep "\`sh $DEVICE DebugPVS\`"`;
-		$BB echo ${PVS##*:} > $DEBUG/pvs_bin;
-	fi
-
-	if [ ! -f $DEBUG/speed_bin ]; then
-		SPEED=`$BB dmesg | $BB grep "\`sh $DEVICE DebugSPEED\`"`;
-		$BB echo ${SPEED##*:} > $DEBUG/speed_bin;
-	fi
-
-	if [ ! -f $DEBUG/last_kmsg ]; then
-		LAST_KMSG=`$BB tail -n 1 /proc/last_kmsg`;
-		$BB echo $LAST_KMSG > $DEBUG/last_kmsg;
-	fi
-
 	source /res/synapse/config.json.generate > $UCI_CONFIG;
 
 	$BB mount -t rootfs -o rw,remount rootfs;
@@ -64,5 +49,4 @@ case "${1}" in
   reset)
 		$BB mount -t rootfs -o rw,remount rootfs;
 		$BB rm -f $UCI_CONFIG;
-		$BB mount -t rootfs -o rw,remount rootfs;;
 esac;
