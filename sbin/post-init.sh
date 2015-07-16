@@ -141,13 +141,6 @@ $BB cp /sbin/busybox /system/xbin/;
 
 chmod 06755 /system/xbin/busybox;
 
-if [ -e /system/xbin/su ]; then
-	$BB chmod 06755 /system/xbin/su;
-fi;
-if [ -e /system/xbin/daemonsu ]; then
-	$BB chmod 06755 /system/xbin/daemonsu;
-fi;
-
 # Make tmp folder
 mkdir /tmp;
 
