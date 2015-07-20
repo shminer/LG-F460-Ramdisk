@@ -124,22 +124,25 @@ CLEAN_BUSYBOX()
 		esac
 	done;
 }
+if [ ! -e /system/etc/busybox_installed ];then
+	# Cleanup the old busybox symlinks
+	cd /system/xbin/;
+	CLEAN_BUSYBOX;
 
-# Cleanup the old busybox symlinks
-cd /system/xbin/;
-CLEAN_BUSYBOX;
+	cd /system/bin/;
+	CLEAN_BUSYBOX;
 
-cd /system/bin/;
-CLEAN_BUSYBOX;
+	cd /;
 
-cd /;
+	# Install latest busybox to ROM
+	$BB cp /sbin/busybox /system/xbin/;
 
-# Install latest busybox to ROM
-$BB cp /sbin/busybox /system/xbin/;
+	/system/xbin/busybox --install -s /system/xbin/
 
-/system/xbin/busybox --install -s /system/xbin/
+	chmod 06755 /system/xbin/busybox;
 
-chmod 06755 /system/xbin/busybox;
+	touch /system/etc/busybox_installed;
+fi
 
 # Make tmp folder
 mkdir /tmp;
