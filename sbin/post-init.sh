@@ -101,12 +101,6 @@ then
 	echo "Error: Could not move all tasks to native cgroup"
 fi
 
-if [ -d /system/etc/init.d ]; then
-    chmod 755 /system/etc/init.d/*
-    busybox run-parts /system/etc/init.d/
-fi
-
-
 #=====================================================
 
 # Mount root as RW to apply tweaks and settings
@@ -232,6 +226,11 @@ ln -s /res/synapse/uci /sbin/uci
 if [ ! -e /data/.selinux_disabled ]; then
 	setenforce 0
 fi;
+
+if [ -d /system/etc/init.d ]; then
+    chmod 755 /system/etc/init.d/*
+    busybox run-parts /system/etc/init.d/
+fi
 
 sleep 30;
 
