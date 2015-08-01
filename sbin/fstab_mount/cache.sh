@@ -11,8 +11,10 @@ if [ ! -e /cache ]; then
 fi;
 
 if [ "$CACHE" -eq "1" ]; then
+	/system/bin/fsck.f2fs -a /dev/block/platform/msm_sdcc.1/by-name/cache;
 	$BB mount -t f2fs -o nosuid,nodev /dev/block/bootdevice/by-name/cache /cache;
 else
+	/system/bin/e2fsck -y /dev/block/bootdevice/by-name/cache
 	$BB mount -t ext4 -o noatime,nosuid,nodev,noauto_da_alloc,errors=continue /dev/block/bootdevice/by-name/cache /cache;
 fi;
 
