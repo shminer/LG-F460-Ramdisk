@@ -230,8 +230,6 @@ if [ -d /system/etc/init.d ]; then
     busybox run-parts /system/etc/init.d/
 fi
 
-sleep 30;
-
 # stop google service and restart it on boot. this remove high cpu load and ram leak!
 if [ "$($BB pidof com.google.android.gms | wc -l)" -eq "1" ]; then
 	$BB kill $($BB pidof com.google.android.gms);
@@ -245,11 +243,6 @@ fi;
 if [ "$($BB pidof com.google.android.gms.wearable | wc -l)" -eq "1" ]; then
 	$BB kill $($BB pidof com.google.android.gms.wearable);
 fi;
-
-sleep 20;
-stop thermal-engine;
-sleep 2
-start thermal-engine;
 
 setprop windowsmgr.max_events_per_sec 240;
 
