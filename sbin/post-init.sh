@@ -55,6 +55,12 @@ echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
 echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
 echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+echo 2649600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo 2649600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+echo 2649600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+echo 2649600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+echo 16650 > /sys/class/devfreq/qcom,cpubw.35/max_freq
+echo 1728000 > /sys/class/devfreq/qcom,cache.34/max_freq
 echo 1 > /sys/module/msm_thermal/core_control/enabled
 chown -h  system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
@@ -68,7 +74,8 @@ chmod 666 /sys/class/kgsl/kgsl-3d0/max_gpuclk
 chmod 666 /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/governor
 chmod 666 /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/*_freq
 echo "100000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/min_freq
-echo "683000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/max_freq
+echo "600000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/max_freq
+echo 1 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
 start gbmonitor
 
 CGROUP_ROOT=/dev/cpuctl
