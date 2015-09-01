@@ -187,11 +187,12 @@ echo "1" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/nome
 echo "2" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/rq_affinity;
 
 # Calibrate display
-echo 1 > /sys/devices/platform/kcal_ctrl.0/kcal_enable
-echo "256 256 253" > /sys/devices/platform/kcal_ctrl.0/kcal
-echo 261 > /sys/devices/platform/kcal_ctrl.0/kcal_sat
-echo 9 > /sys/devices/platform/kcal_ctrl.0/kcal_hue
-echo 258 > /sys/devices/platform/kcal_ctrl.0/kcal_val
+echo 1 > /sys/devices/platform/kcal_ctrl.0/kcal_enable;
+echo "256 256 253" > /sys/devices/platform/kcal_ctrl.0/kcal;
+echo 261 > /sys/devices/platform/kcal_ctrl.0/kcal_sat;
+echo 257 > /sys/devices/platform/kcal_ctrl.0/kcal_cont;
+echo 9 > /sys/devices/platform/kcal_ctrl.0/kcal_hue;
+echo 256 > /sys/devices/platform/kcal_ctrl.0/kcal_val;
 
 # Install Busybox
 /sbin/busybox --install -s /sbin
