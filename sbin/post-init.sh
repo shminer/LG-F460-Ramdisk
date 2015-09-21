@@ -234,7 +234,7 @@ if [ ! -e /data/.selinux_disabled ]; then
 fi;
 
 # Enable Power modes
-echo 1 > /sys/module/lpm_levels/parameters/sleep_disabled
+echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
 if [ -d /system/etc/init.d ]; then
     chmod 755 /system/etc/init.d/*
