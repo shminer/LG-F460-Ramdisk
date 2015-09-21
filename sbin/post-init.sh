@@ -233,6 +233,9 @@ if [ ! -e /data/.selinux_disabled ]; then
 	setenforce 0
 fi;
 
+# Enable Power modes
+echo 1 > /sys/module/lpm_levels/parameters/sleep_disabled
+
 if [ -d /system/etc/init.d ]; then
     chmod 755 /system/etc/init.d/*
     busybox run-parts /system/etc/init.d/

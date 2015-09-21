@@ -46,6 +46,7 @@ on chargerlogo_exec
    write /sys/class/android_usb/android0/bDeviceProtocol 0
    write /sys/class/android_usb/android0/functions charge_only
    write /sys/class/android_usb/android0/enable 1
+   write /sys/module/lpm_levels/parameters/sleep_disabled 0
    exec /sbin/chargerlogo
 
 # smpl_count
