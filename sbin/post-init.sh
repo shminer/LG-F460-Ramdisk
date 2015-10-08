@@ -232,6 +232,9 @@ if [ ! -e /data/.selinux_disabled ]; then
 	setenforce 0
 fi;
 
+echo "1024" > /proc/sys/kernel/random/read_wakeup_threshold;
+echo "256" > /proc/sys/kernel/random/write_wakeup_threshold;
+
 # Enable Power modes
 echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
