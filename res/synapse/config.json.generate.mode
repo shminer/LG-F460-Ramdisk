@@ -3,7 +3,7 @@ cat << CTAG
 		name:JZ内核页面,
 			elements:[
 				{ SPane:{
-					title:"Linux版本  JZ内核版本1.9",
+					title:"Linux版本  JZ内核版本2.0",
 					description:"`$BB cat /proc/version`"
 				}},
 				{ SPane:{
