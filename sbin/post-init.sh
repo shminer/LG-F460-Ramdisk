@@ -185,12 +185,12 @@ $BB chmod 666 /sys/class/kgsl/kgsl-3d0/max_gpuclk
 # tune I/O controls to boost I/O performance
 echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/nomerges;
 echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/nomerges;
-echo "2" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/rq_affinity;
-echo "2" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/rq_affinity;
+echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/rq_affinity;
+echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/rq_affinity;
 
 # tune I/O controls to boost I/O performance
 echo "1" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/nomerges;
-echo "2" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/rq_affinity;
+echo "1" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/rq_affinity;
 
 # Calibrate display
 echo 1 > /sys/devices/platform/kcal_ctrl.0/kcal_enable;
@@ -258,5 +258,6 @@ if [ "$($BB pidof com.google.android.gms.wearable | wc -l)" -eq "1" ]; then
 fi;
 
 setprop windowsmgr.max_events_per_sec 240;
-
+# make sure bq24296 iusb was no limited
+echo 2000 > /sys/module/bq24296_charger/parameters/iusb_control;
 exit;
