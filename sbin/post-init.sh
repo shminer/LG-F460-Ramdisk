@@ -183,12 +183,14 @@ $BB chmod 666 /sys/module/msm_thermal/parameters/*
 $BB chmod 666 /sys/class/kgsl/kgsl-3d0/max_gpuclk
 
 # tune I/O controls to boost I/O performance
+echo "0" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/add_random;
 echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/nomerges;
 echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/nomerges;
 echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/rq_affinity;
 echo "1" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb/queue/rq_affinity;
 
 # tune I/O controls to boost I/O performance
+echo "0" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/add_random;
 echo "1" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/nomerges;
 echo "1" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/rq_affinity;
 
