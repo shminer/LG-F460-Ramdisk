@@ -1,5 +1,7 @@
 #!/sbin/busybox sh
 
+BB=/sbin/busybox;
+
 # LGE_CHANGE_S, [LGE_DATA][LGP_DATA_TCPIP_NSRM]
 targetProd=`getprop ro.product.name`
 case "$targetProd" in
@@ -112,7 +114,30 @@ fi
 mount -o remount,rw /;
 mount -o rw,remount /system
 
-BB=/sbin/busybox
+# Permissions for LMK
+$BB chmod 0664 /sys/module/lowmemorykiller/parameters/adj
+$BB chmod 0664 /sys/module/lowmemorykiller/parameters/minfree
+$BB chmod 0664 /sys/module/lowmemorykiller/parameters/cost
+$BB chmod 0664 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+$BB chmod 0664 /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+
+# Tune LMK with values we love
+$BB echo "12288,15360,18432,21504,24576,30720" > /sys/module/lowmemorykiller/parameters/minfree
+$BB echo 32 > /sys/module/lowmemorykiller/parameters/cost
+
+# Adaptive LMK
+$BB echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+$BB echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+
+# Process Reclaim
+$BB echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+$BB echo 100 > /sys/module/process_reclaim/parameters/pressure_max
+
+# Tweak VM
+$BB echo 200 > /proc/sys/vm/dirty_expire_centisecs
+$BB echo 20 > /proc/sys/vm/dirty_background_ratio
+$BB echo 40 > /proc/sys/vm/dirty_ratio
+$BB echo 0 > /proc/sys/vm/swappiness
 
 CLEAN_BUSYBOX()
 {
