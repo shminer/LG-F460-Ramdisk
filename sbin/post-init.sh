@@ -137,7 +137,7 @@ $BB echo 100 > /sys/module/process_reclaim/parameters/pressure_max
 $BB echo 200 > /proc/sys/vm/dirty_expire_centisecs
 $BB echo 20 > /proc/sys/vm/dirty_background_ratio
 $BB echo 40 > /proc/sys/vm/dirty_ratio
-$BB echo 0 > /proc/sys/vm/swappiness
+$BB echo 10 > /proc/sys/vm/swappiness
 
 CLEAN_BUSYBOX()
 {
