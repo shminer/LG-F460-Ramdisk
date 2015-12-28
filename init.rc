@@ -17,9 +17,6 @@ on early-init
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
 
-    # Apply strict SELinux checking of PROT_EXEC on mmap/mprotect calls.
-    write /sys/fs/selinux/checkreqprot 0
-
     # Set the security context for the init process.
     # This should occur before anything else (e.g. ueventd) is started.
     setcon u:r:init:s0
@@ -34,8 +31,6 @@ on early-init
 
 on init
     sysclktz 0
-    setenforce 0
-    setprop ro.boot.selinux 0
 
 	loglevel 3
 
@@ -227,9 +222,6 @@ on post-fs
     chown system log /proc/last_kmsg
     chmod 0440 /proc/last_kmsg
 
-    # make the selinux kernel policy world-readable
-    chmod 0444 /sys/fs/selinux/policy
-
     # create the lost+found directories, so as to enforce our permissions
     mkdir /cache/lost+found 0770 root root
 
@@ -321,12 +313,6 @@ on post-fs-data
 
     # Separate location for storing security policy files on data
     mkdir /data/security 0711 system system
-
-    # Reload policy from /data/security if present.
-    setprop selinux.reload_policy 1
-
-    # Set SELinux security contexts on upgrade or policy update.
-    restorecon_recursive /data
 
     # If there is no fs-post-data action in the init.<device>.rc file, you
     # must uncomment this line, otherwise encrypted filesystems
