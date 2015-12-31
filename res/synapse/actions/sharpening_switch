@@ -1,0 +1,16 @@
+
+if [ "$1" == "1" ];then
+	touch /set_sharpe;
+	echo `cat /sdcard/Synapse/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+fi
+if [ "$1" == "0" ];then
+	if [ -e /set_sharpe ];then
+		rm /set_sharpe;
+		echo 9 > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+	fi
+fi
+if [ -e /set_sharpe ];then
+	echo "1";
+else
+	echo "0";
+fi

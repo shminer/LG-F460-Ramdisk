@@ -3,24 +3,6 @@ cat << CTAG
 	name:实用工具,
 		elements:[
 			{ SPane:{
-				title:"SELinux 状态",
-				description:"更改 SELinux (安全加强 Linux) 状态，更改 Enforcing (实施策略) 到 Permissive (只警告，而不是强制执行)。",
-			}},
-				{ SOptionList:{
-					default:`getenforce`,
-					action:"devtools selinux",
-					values:[ Enforcing, Permissive ],
-				}},
-			`if [ -f "/sys/module/selinux/parameters/force_audit" ]; then
-				FAUDIT=\`bool /sys/module/selinux/parameters/force_audit\`;
-					$BB echo '{ SCheckBox:{
-						label:"强制审核",
-						description:"启用SELinux的调试驱动程序。",
-						default:'$FAUDIT',
-						action:"boolean /sys/module/selinux/parameters/force_audit"
-					}},'
-			fi`
-			{ SPane:{
 				title:"高级工具"
 			}},
 				{ SDescription:{
