@@ -1,78 +1,9 @@
 # This file will be installed as /init.{ro.hardware}.rc
-
 import /init.qcom.rc
 
 # to override init.qcom.rc and init.target.rc
 import /init.lge.usb.rc
-import /init.lge.log.rc
-import /init.tigerf_core.rc
+import /init.lge.fs.rc
 import /init.lge.power.rc
 
-
-on init
-
-# Create filesystems if necessary.
-# LGE_UPDATE_START, 2014/10/28, T6-BSP-FileSystemS@lge.com
-    exec /sbin/setup_fs_static \
-        /dev/block/bootdevice/by-name/userdata \
-        /dev/block/bootdevice/by-name/cache \
-        /dev/block/bootdevice/by-name/drm \
-        /dev/block/bootdevice/by-name/sns \
-        /dev/block/bootdevice/by-name/mpt \
-        no_reboot
-# LGE_UPDATE_END
-
-
-    # LGE_CHANGE_START, 2014/10/17, p1-fs@lge.com
-    # To use USB-OTG
-    mkdir /mnt/media_rw/USBstorage1 0700 media_rw media_rw
-	mkdir /mnt/media_rw/USBstorage2 0700 media_rw media_rw
-	mkdir /mnt/media_rw/USBstorage3 0700 media_rw media_rw
-	mkdir /mnt/media_rw/USBstorage4 0700 media_rw media_rw
-	mkdir /mnt/media_rw/USBstorage5 0700 media_rw media_rw
-	mkdir /mnt/media_rw/USBstorage6 0700 media_rw media_rw
-
-	export EXTERNAL_ADD_USB_STORAGE1 /storage/USBstorage1
-	export EXTERNAL_ADD_USB_STORAGE2 /storage/USBstorage2
-	export EXTERNAL_ADD_USB_STORAGE3 /storage/USBstorage3
-	export EXTERNAL_ADD_USB_STORAGE4 /storage/USBstorage4
-	export EXTERNAL_ADD_USB_STORAGE5 /storage/USBstorage5
-	export EXTERNAL_ADD_USB_STORAGE6 /storage/USBstorage6
-
-	mkdir /storage/USBstorage1 0700 root root
-	mkdir /storage/USBstorage2 0700 root root
-	mkdir /storage/USBstorage3 0700 root root
-	mkdir /storage/USBstorage4 0700 root root
-	mkdir /storage/USBstorage5 0700 root root
-	mkdir /storage/USBstorage6 0700 root root
-# LGE_CHANGE_END
-
-# LGE_CHANGE_START, 2014/10/17, p1-fs@lge.com
-service fuse_USBstorage1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage1 /storage/USBstorage1
-    class late_start
-    disabled
-
-service fuse_USBstorage2 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage2 /storage/USBstorage2
-    class late_start
-    disabled
-
-service fuse_USBstorage3 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage3 /storage/USBstorage3
-    class late_start
-    disabled
-
-service fuse_USBstorage4 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage4 /storage/USBstorage4
-    class late_start
-    disabled
-
-service fuse_USBstorage5 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage5 /storage/USBstorage5
-    class late_start
-    disabled
-
-service fuse_USBstorage6 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/USBstorage6 /storage/USBstorage6
-    class late_start
-    disabled
-# LGE_CHANGE_END
-# [LGE_MODEMBSP] modem reset feature [START]
-on property:rild.modem_restart=silence
-    write /sys/module/lge_handle_panic/parameters/gen_modem_panic 2
-# [LGE_MODEMBSP] modem reset feature [END]
+import /init.apq8084_core.rc

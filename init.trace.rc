@@ -1,6 +1,6 @@
 ## Permissions to allow system-wide tracing to the kernel trace buffer.
 ##
-on early-boot
+on boot
 
 # Allow writing to the kernel trace log.
     chmod 0222 /sys/kernel/debug/tracing/trace_marker
@@ -33,20 +33,3 @@ on early-boot
 # Allow only the shell group to read and truncate the kernel trace.
     chown root shell /sys/kernel/debug/tracing/trace
     chmod 0660 /sys/kernel/debug/tracing/trace
-
-#addtional tracing
-    chown root shell /sys/kernel/debug/tracing/events/kgsl/syncpoint_timestamp/enable
-    chown root shell /sys/kernel/debug/tracing/events/kgsl/syncpoint_timestamp_expire/enable
-    chown root shell /sys/kernel/debug/tracing/events/kgsl/syncpoint_fence/enable
-    chown root shell /sys/kernel/debug/tracing/events/kgsl/syncpoint_fence_expire/enable
-    chown root shell /sys/kernel/debug/tracing/events/sync/sync_pt/enable
-    chown root shell /sys/kernel/debug/tracing/events/sync/sync_wait/enable
-    chown root shell /sys/kernel/debug/tracing/events/sync/sync_timeline/enable
-
-    chmod 0664 /sys/kernel/debug/tracing/events/kgsl/syncpoint_timestamp/enable
-    chmod 0664 /sys/kernel/debug/tracing/events/kgsl/syncpoint_timestamp_expire/enable
-    chmod 0664 /sys/kernel/debug/tracing/events/kgsl/syncpoint_fence/enable
-    chmod 0664 /sys/kernel/debug/tracing/events/kgsl/syncpoint_fence_expire/enable
-    chmod 0664 /sys/kernel/debug/tracing/events/sync/sync_pt/enable
-    chmod 0664 /sys/kernel/debug/tracing/events/sync/sync_wait/enable
-    chmod 0664 /sys/kernel/debug/tracing/events/sync/sync_timeline/enable

@@ -26,12 +26,15 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+import /init.${ro.hardware}.power.rc
+
 # chargerlogo
 on chargerlogo
    trigger early-fs
    trigger fs
    trigger post-fs
    trigger post-fs-data
+   trigger load_all_props_action
    trigger chargerlogo_exec
 
 on chargerlogo_exec
@@ -46,8 +49,10 @@ on chargerlogo_exec
    write /sys/class/android_usb/android0/bDeviceProtocol 0
    write /sys/class/android_usb/android0/functions charge_only
    write /sys/class/android_usb/android0/enable 1
-   write /sys/module/lpm_levels/parameters/sleep_disabled 0
-   exec /sbin/chargerlogo
+   write /persist-lg/chargerlogo/autoboot_nosound 0
+   chmod 0666 /persist-lg/chargerlogo/autoboot_nosound
+
+   exec u:r:chargerlogo:s0 -- /sbin/chargerlogo
 
 # smpl_count
 service smpl_count /system/bin/smpl_count
@@ -87,5 +92,24 @@ on boot
 # charger timer
    chown system system /sys/class/power_supply/ac/charger_timer
 
+# charging_enable
+   chown system system /sys/class/power_supply/battery/charging_enabled
+
+# safety timer
+   chown system system /sys/class/power_supply/battery/safety_timer_enabled
+
 # printk log level
    write /proc/sys/kernel/printk "7 6 1 7"
+
+#usb current max mode property
+on property:persist.service.usbcurrentmax=1
+	write /sys/class/power_supply/battery/usb_current_max_mode 1
+on property:persist.service.usbcurrentmax=0
+	write /sys/class/power_supply/battery/usb_current_max_mode 0
+
+# Power_BSP, add hard reset property
+on property:persist.lge.hardreset=1
+	write /sys/module/msm_poweroff/parameters/hard_reset 1
+on property:persist.lge.hardreset=0
+	write /sys/module/msm_poweroff/parameters/hard_reset 0
+
