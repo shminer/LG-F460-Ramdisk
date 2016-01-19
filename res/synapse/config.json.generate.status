@@ -1,0 +1,75 @@
+#!/sbin/busybox sh
+
+cat << CTAG
+{
+	name:系统状态,
+		elements:[
+			{ SPane:{
+				title:"系统信息",
+			}},
+			{ SLiveLabel:{
+					title: "显示当前CPU最大最小频率",
+					refresh:2000,
+					action:"live CPU_MAX_MIN_Freq"
+			}},
+			{ SLiveLabel:{
+					title: "显示当前CPU频率",
+					refresh:2000,
+					action:"live CPU_CUR_Freq"
+			}},
+			{ SLiveLabel:{
+				title:"当前CPU调速器",
+				refresh:8000,
+				action:"live DefaultCPUGovernor"
+			}},
+			{ SLiveLabel:{
+				title:"当前CPU热插拔驱动",
+				refresh:8000,
+				action:"live CPU_HOTPLUG"
+			}},
+			{ SLiveLabel:{
+				title:"CPU 温度:",
+				refresh:3000,
+				action:"live CPUTemperature"
+			}},
+			{ SLiveLabel:{
+					title: "当前温控状态",
+					refresh:2000,
+					action:"live Thermalstats"
+			}},
+			{ SLiveLabel:{
+				title:"电池温度:",
+				refresh:3000,
+				action:"live BatteryTemperature"
+			}},
+			{ SLiveLabel:{
+				title:"内存状况:",
+				refresh:3000,
+				action:"live Memory"
+			}},
+			{ SLiveLabel:{
+				title:"时间状态:",
+				refresh:5000,
+				action:"live UpTime"
+			}},
+			{ SLiveLabel:{
+				title:"未使用频率:",
+				refresh:5000,
+				action:"live UnUsed"
+			}},
+			{ SLiveLabel:{
+				title:"各频率时间:",
+				refresh:5000,
+				action:"live Time 0 9"
+			}},
+			{ SLiveLabel:{
+				refresh:5000,
+				action:"live Time 10 19"
+			}},
+			{ SLiveLabel:{
+				refresh:5000,
+				action:"live Time 20 20"
+			}},
+		]
+}
+CTAG
