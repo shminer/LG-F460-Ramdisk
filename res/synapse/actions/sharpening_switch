@@ -1,11 +1,23 @@
 
+set_check()
+{
+	if [ ! -e /bootC ];then
+		input keyevent 26;
+		sleep 1;
+		input keyevent 26;
+		touch /bootC;
+	fi
+}
 if [ "$1" == "1" ];then
 	touch /set_sharpe;
+	set_check;
 	echo `cat /sdcard/Synapse/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
 fi
+
 if [ "$1" == "0" ];then
 	if [ -e /set_sharpe ];then
 		rm /set_sharpe;
+		set_check;
 		echo 40 > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
 	fi
 fi

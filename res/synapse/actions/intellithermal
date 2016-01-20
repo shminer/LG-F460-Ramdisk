@@ -111,14 +111,14 @@ case $1 in
 		if [[ ! -z "$2" ]]; then
 				if [ $2 -eq "1" ];then
 					stop thermal-engine;
-					sleep 1;
 					start thermal-engine;
 				fi
 				if [ $2 -eq "0" ];then
 					stop thermal-engine;
 				fi
 		fi;
-		serveron=`pgrep -f "/system/bin/thermal-engine" | wc -l`	
+		thermal_path=`find /system -name "thermal-engine"`;
+		serveron=`pgrep -f "${thermal_path}" | wc -l`;
 		if [ ${serveron} == 1 ];then
 			echo "1";
 		else

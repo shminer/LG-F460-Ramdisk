@@ -2,21 +2,21 @@ BB=/sbin/busybox;
 
 if [ ! -e /sdcard/Synapse/sharpening ];then
 	touch /sdcard/Synapse/sharpening;
+	echo `cat /sys/devices/virtual/graphics/fb0/lge_sharpening_level` > /sdcard/Synapse/sharpening;
 fi
 
 if [ -f $1 ];then
 	if [[ ! -z $2 ]]; then
+		echo $2 > /sdcard/Synapse/sharpening;
 		if [ -e /set_sharpe ];then
-			echo $2 > $1;
-			echo $2 > /sdcard/Synapse/sharpening;
 			if [ ! -e /bootC ];then
 				input keyevent 26;
-				sleep 2;
+				sleep 1;
 				input keyevent 26;
 				touch /bootC;
 			fi
+			echo $2 > $1;
 		fi
 	fi
-
-	echo `cat $1`
+	echo `cat /sdcard/Synapse/sharpening`;
 fi

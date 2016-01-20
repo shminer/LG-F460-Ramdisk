@@ -2,23 +2,6 @@
 
 BB=/sbin/busybox;
 
-# LGE_CHANGE_S, [LGE_DATA][LGP_DATA_TCPIP_NSRM]
-targetProd=`getprop ro.product.name`
-case "$targetProd" in
-   "tiger6_lgu_kr" | "tiger6_skt_kr")
-   mkdir /data/connectivity/
-   chown system.system /data/connectivity/
-   chmod 775 /data/connectivity/
-   mkdir /data/connectivity/nsrm/
-   chown system.system /data/connectivity/nsrm/
-   chmod 775 /data/connectivity/nsrm/
-   cp /system/etc/dpm/nsrm/NsrmConfiguration.xml /data/connectivity/nsrm/
-   chown system.system /data/connectivity/nsrm/NsrmConfiguration.xml
-   chmod 775 /data/connectivity/nsrm/NsrmConfiguration.xml
-   ;;
-   esac
-# LGE_CHANGE_E, [LGE_DATA][LGP_DATA_TCPIP_NSRM]
-
 #APQ8084 tune
 echo 4 > /sys/module/lpm_levels/enable_low_power/l2
 echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
@@ -52,7 +35,7 @@ echo 120 > /sys/module/cpu_boost/parameters/boost_ms
 echo 1497600 > /sys/module/cpu_boost/parameters/sync_threshold
 echo 1497600 > /sys/module/cpu_boost/parameters/input_boost_freq
 echo 980 > /sys/module/cpu_boost/parameters/input_boost_ms
-echo 1 > /dev/cpuctl/apps/cpu.notify_on_migrate
+echo 1 > /dev/cpuctl/cpu.notify_on_migrate
 echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
 echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
@@ -72,13 +55,13 @@ chown -h root.system /sys/devices/system/cpu/cpu3/online
 chmod -h 664 /sys/devices/system/cpu/cpu1/online
 chmod -h 664 /sys/devices/system/cpu/cpu2/online
 chmod -h 664 /sys/devices/system/cpu/cpu3/online
+chmod 444 /sys/class/graphics/fb0/dynamic_fps
 chmod 666 /sys/class/kgsl/kgsl-3d0/max_gpuclk
 chmod 666 /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/governor
 chmod 666 /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/*_freq
 echo "100000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/min_freq
 echo "600000000" > /sys/devices/fdb00000.qcom,kgsl-3d0/devfreq/fdb00000.qcom,kgsl-3d0/max_freq
 echo 1 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
-start gbmonitor
 
 CGROUP_ROOT=/dev/cpuctl
 mkdir $CGROUP_ROOT/native
@@ -112,7 +95,7 @@ fi
 
 # Mount root as RW to apply tweaks and settings
 mount -o remount,rw /;
-mount -o rw,remount /system
+mount -o remount,rw, /system;
 
 # Permissions for LMK
 $BB chmod 0664 /sys/module/lowmemorykiller/parameters/adj
@@ -222,13 +205,20 @@ echo "1" > /sys/devices/msm_sdcc.2/mmc_host/mmc1/mmc1:*/block/mmcblk1/queue/rq_a
 # Calibrate display
 echo 1 > /sys/devices/platform/kcal_ctrl.0/kcal_enable;
 echo "256 256 253" > /sys/devices/platform/kcal_ctrl.0/kcal;
-echo 261 > /sys/devices/platform/kcal_ctrl.0/kcal_sat;
-echo 257 > /sys/devices/platform/kcal_ctrl.0/kcal_cont;
-echo 9 > /sys/devices/platform/kcal_ctrl.0/kcal_hue;
+echo 251 > /sys/devices/platform/kcal_ctrl.0/kcal_sat;
+echo 255 > /sys/devices/platform/kcal_ctrl.0/kcal_cont;
+echo 4 > /sys/devices/platform/kcal_ctrl.0/kcal_hue;
 echo 256 > /sys/devices/platform/kcal_ctrl.0/kcal_val;
 
 # Install Busybox
 /sbin/busybox --install -s /sbin
+
+ln -s /res/synapse/uci /sbin/uci
+/sbin/uci
+
+if [ ! -e /data/.selinux_disabled ]; then
+	setenforce 0
+fi;
 
 # Allow untrusted apps to read from debugfs
 if [ -e /system/lib/libsupol.so ]; then
@@ -252,13 +242,6 @@ if [ -e /system/lib/libsupol.so ]; then
 	"allow debuggerd app_data_file dir search"
 fi;
 
-ln -s /res/synapse/uci /sbin/uci
-/sbin/uci
-
-if [ ! -e /data/.selinux_disabled ]; then
-	setenforce 0
-fi;
-
 echo "1024" > /proc/sys/kernel/random/read_wakeup_threshold;
 echo "256" > /proc/sys/kernel/random/write_wakeup_threshold;
 
@@ -269,6 +252,9 @@ if [ -d /system/etc/init.d ]; then
     chmod 755 /system/etc/init.d/*
     busybox run-parts /system/etc/init.d/
 fi
+
+mount -o remount,rw /;
+mount -o remount,rw, /system;
 
 # stop google service and restart it on boot. this remove high cpu load and ram leak!
 if [ "$($BB pidof com.google.android.gms | wc -l)" -eq "1" ]; then

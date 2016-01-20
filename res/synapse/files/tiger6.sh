@@ -71,7 +71,8 @@ case "$1" in
 	;;
 	LiveThermalstats)
 		Thermal=/sys/module/msm_thermal/parameters;
-		serveron=`pgrep -f "/system/bin/thermal-engine" | wc -l`;
+		thermal_path=`find /system -name "thermal-engine"`;
+		serveron=`pgrep -f "${thermal_path}" | wc -l`;
 		intelli_enabled=`$BB cat ${Thermal}/intelli_enabled`;
 		sensor_id=`$BB cat ${Thermal}/sensor_id`;
 		limit_temp_degC=`$BB cat ${Thermal}/limit_temp_degC`;
