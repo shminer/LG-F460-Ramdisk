@@ -1,4 +1,10 @@
 
+mount -o remount,rw /
+
+if [ ! -d  /data/.jz_sy ];then
+	mkdir /data/.jz_sy
+fi
+
 set_check()
 {
 	if [ ! -e /bootC ];then
@@ -8,20 +14,22 @@ set_check()
 		touch /bootC;
 	fi
 }
+
 if [ "$1" == "1" ];then
-	touch /set_sharpe;
+	touch /data/.jz_sy/set_sharpe;
 	set_check;
-	echo `cat /sdcard/Synapse/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+	echo `cat /data/.jz_sy/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
 fi
 
 if [ "$1" == "0" ];then
-	if [ -e /set_sharpe ];then
-		rm /set_sharpe;
-		set_check;
-		echo 40 > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+	if [ -e /data/.jz_sy/set_sharpe ];then
+		rm /data/.jz_sy/set_sharpe;
 	fi
+	set_check;
+	echo 40 > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
 fi
-if [ -e /set_sharpe ];then
+
+if [ -e /data/.jz_sy/set_sharpe ];then
 	echo "1";
 else
 	echo "0";

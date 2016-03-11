@@ -1,14 +1,20 @@
 BB=/sbin/busybox;
 
-if [ ! -e /sdcard/Synapse/sharpening ];then
-	touch /sdcard/Synapse/sharpening;
-	echo `cat /sys/devices/virtual/graphics/fb0/lge_sharpening_level` > /sdcard/Synapse/sharpening;
+mount -o remount,rw /
+
+if [ ! -d  /data/.jz_sy ];then
+	mkdir /data/.jz_sy
+fi
+
+if [ ! -e /data/.jz_sy/sharpening ];then
+	touch /data/.jz_sy/sharpening;
+	echo `cat /sys/devices/virtual/graphics/fb0/lge_sharpening_level` > /data/.jz_sy/sharpening;
 fi
 
 if [ -f $1 ];then
 	if [[ ! -z $2 ]]; then
-		echo $2 > /sdcard/Synapse/sharpening;
-		if [ -e /set_sharpe ];then
+		echo $2 > /data/.jz_sy/sharpening;
+		if [ -e /data/.jz_sy/set_sharpe ];then
 			if [ ! -e /bootC ];then
 				input keyevent 26;
 				sleep 1;
@@ -18,5 +24,5 @@ if [ -f $1 ];then
 			echo $2 > $1;
 		fi
 	fi
-	echo `cat /sdcard/Synapse/sharpening`;
+	echo `cat /data/.jz_sy/sharpening`;
 fi
