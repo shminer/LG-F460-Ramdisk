@@ -3,18 +3,11 @@ cat << CTAG
 		name:CPU设置,
 			elements:[
 					{ SPane:{
-							title:"CPU当前频率:"
-						}},
-						{ SLiveLabel:{
-							refresh:1000,
-							action:"live CPU_CUR_Freq"
+						title:"CPU当前频率:"
 					}},
-					{ SDescription:{
-						description:"受到不同软件或者thermal的影响，如果发现各个核心最大最小频率不正常，可按此键校准"
-					}},
-					{ SButton:{
-						label:"CPU校准",
-						action:"setcpufreq fixcpufreq"
+					{ SLiveLabel:{
+						refresh:1000,
+						action:"live CPU_CUR_Freq"
 					}},
 					{ STitleBar:{
 						title:"CPU频率调节"
