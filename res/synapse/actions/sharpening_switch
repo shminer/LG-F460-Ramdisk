@@ -15,18 +15,20 @@ set_check()
 	fi
 }
 
-if [ "$1" == "1" ];then
-	touch /data/.jz_sy/set_sharpe;
-	set_check;
-	echo `cat /data/.jz_sy/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
-fi
-
-if [ "$1" == "0" ];then
-	if [ -e /data/.jz_sy/set_sharpe ];then
-		rm /data/.jz_sy/set_sharpe;
+if [[ ! -z $1 ]];then
+	if [ "$1" == "1" ];then
+		touch /data/.jz_sy/set_sharpe;
+		set_check;
+		echo `cat /data/.jz_sy/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
 	fi
-	set_check;
-	echo 40 > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+
+	if [ "$1" == "0" ];then
+		if [ -e /data/.jz_sy/set_sharpe ];then
+			rm /data/.jz_sy/set_sharpe;
+		fi
+		set_check;
+		echo 40 > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+	fi
 fi
 
 if [ -e /data/.jz_sy/set_sharpe ];then
