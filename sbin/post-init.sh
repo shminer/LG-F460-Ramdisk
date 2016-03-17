@@ -36,10 +36,10 @@ echo 1497600 > /sys/module/cpu_boost/parameters/sync_threshold
 echo 1497600 > /sys/module/cpu_boost/parameters/input_boost_freq
 echo 980 > /sys/module/cpu_boost/parameters/input_boost_ms
 echo 1 > /dev/cpuctl/cpu.notify_on_migrate
-echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+echo 268000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo 268000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo 268000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+echo 268000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
 echo 2649600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo 2649600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
 echo 2649600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq

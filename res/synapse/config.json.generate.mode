@@ -8,7 +8,7 @@ cat << CTAG
 				}},
 				{ SPane:{
 					title:"捐赠",
-					description:"如果你对这个内核很满意，可以通过支付宝捐助我。支付宝账号:332574643@qq.com."
+					description:"如果你对这个内核很满意，可以通过支付宝捐助我。支付宝账号:3.2574643@qq.com."
 				}},
 				{ SPane:{
 					title:"模式切换",

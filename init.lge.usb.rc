@@ -103,6 +103,7 @@ on init
 on post-fs-data
     chown system system /sys/devices/platform/lg_diag_cmd/diag_enable
     chmod 0660 /sys/devices/platform/lg_diag_cmd/diag_enable
+    write /sys/devices/platform/lg_diag_cmd/diag_enable 1
 
 ################################################################################
 # COMMON2
