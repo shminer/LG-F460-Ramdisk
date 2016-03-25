@@ -138,19 +138,11 @@ service dhcp6c_wlan0 /system/bin/dhcp6c -c "/etc/wide-dhcpv6/dhcp6c.conf" -Df wl
     oneshot
 #[END][LGE_WIFI][CT][hayun.kim@lge.com] : [SPEC] PPPOE Feature
 
-#[START][LGE_WIFI][COMMON]: TO read WIFI MAC from LGFTM(MISC - block device)
 service wififtmd /system/bin/wififtmd
     user root
     group radio system
     disabled
     oneshot
-
-on property:wifi_ftm.wififtmd_start=1
-    start wififtmd
-
-on property:wifi_ftm.wififtmd_start=0
-    stop wififtmd
-#[END][LGE_WIFI][COMMON]: TO read WIFI MAC from LGFTM(MISC - block device)
 
 # [START][MODEM_BSP][kyeongsu.jang@lge.com] : SSR feature and SSR Ramdump feature
 on property:persist.sys.ssr.restart_level=1

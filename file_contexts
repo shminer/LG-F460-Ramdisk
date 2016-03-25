@@ -317,7 +317,7 @@
 /mnt/user(/.*)?             u:object_r:mnt_user_file:s0
 /mnt/runtime(/.*)?          u:object_r:storage_file:s0
 /storage(/.*)?              u:object_r:storage_file:s0
-#line 1 "vendor/cm/sepolicy/file_contexts"
+#line 1 "vendor/mk/sepolicy/file_contexts"
 /cache/dalvik-cache(/.*)? u:object_r:dalvikcache_data_file:s0
 
 /cache/recovery(/.*)?     u:object_r:recovery_cache_file:s0
@@ -343,7 +343,7 @@
 /sbin/minivold            u:object_r:vold_exec:s0
 
 #############################
-# performance-related sysfs files (CM)
+# performance-related sysfs files (MK)
 /sys/devices/system/cpu.*/cpufreq(/.*)? --  u:object_r:sysfs_devices_system_cpu:s0
 /sys/block/mmcblk.*/queue/scheduler  --    u:object_r:sysfs_devices_system_iosched:s0
 

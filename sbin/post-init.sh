@@ -1,7 +1,3 @@
-#!/sbin/busybox sh
-
-BB=/sbin/busybox;
-
 #APQ8084 tune
 echo 4 > /sys/module/lpm_levels/enable_low_power/l2
 echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
@@ -36,10 +32,10 @@ echo 1497600 > /sys/module/cpu_boost/parameters/sync_threshold
 echo 1497600 > /sys/module/cpu_boost/parameters/input_boost_freq
 echo 980 > /sys/module/cpu_boost/parameters/input_boost_ms
 echo 1 > /dev/cpuctl/cpu.notify_on_migrate
-echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+echo 268000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo 268000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+echo 268000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+echo 268000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
 echo 2649600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo 2649600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
 echo 2649600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
@@ -97,36 +93,39 @@ fi
 mount -o remount,rw /;
 mount -o remount,rw, /system;
 
+# WIFI MAC address
+start wififtmd
+
 # Permissions for LMK
-$BB chmod 0664 /sys/module/lowmemorykiller/parameters/adj
-$BB chmod 0664 /sys/module/lowmemorykiller/parameters/minfree
-$BB chmod 0664 /sys/module/lowmemorykiller/parameters/cost
-$BB chmod 0664 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-$BB chmod 0664 /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+chmod 0664 /sys/module/lowmemorykiller/parameters/adj
+chmod 0664 /sys/module/lowmemorykiller/parameters/minfree
+chmod 0664 /sys/module/lowmemorykiller/parameters/cost
+chmod 0664 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+chmod 0664 /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 
 # Tune LMK with values we love
-$BB echo "12288,15360,18432,21504,24576,30720" > /sys/module/lowmemorykiller/parameters/minfree
-$BB echo 32 > /sys/module/lowmemorykiller/parameters/cost
+echo "12288,15360,18432,21504,24576,30720" > /sys/module/lowmemorykiller/parameters/minfree
+echo 32 > /sys/module/lowmemorykiller/parameters/cost
 
 # Adaptive LMK
-$BB echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-$BB echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 
 # Process Reclaim
-$BB echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
-$BB echo 100 > /sys/module/process_reclaim/parameters/pressure_max
+echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+echo 100 > /sys/module/process_reclaim/parameters/pressure_max
 
 # Tweak VM
-$BB echo 200 > /proc/sys/vm/dirty_expire_centisecs
-$BB echo 20 > /proc/sys/vm/dirty_background_ratio
-$BB echo 40 > /proc/sys/vm/dirty_ratio
-$BB echo 10 > /proc/sys/vm/swappiness
+echo 200 > /proc/sys/vm/dirty_expire_centisecs
+echo 20 > /proc/sys/vm/dirty_background_ratio
+echo 40 > /proc/sys/vm/dirty_ratio
+echo 10 > /proc/sys/vm/swappiness
 
 CLEAN_BUSYBOX()
 {
 	for f in *; do
-		case "$($BB readlink "$f")" in *usybox*)
-			$BB rm "$f"
+		case "$(readlink "$f")" in *usybox*)
+			rm "$f"
 		;;
 		esac
 	done;
@@ -142,7 +141,7 @@ if [ ! -e /system/etc/busybox_installed ];then
 	cd /;
 
 	# Install latest busybox to ROM
-	$BB cp /sbin/busybox /system/xbin/;
+	cp /sbin/busybox /system/xbin/;
 
 	/system/xbin/busybox --install -s /system/xbin/
 
@@ -168,27 +167,27 @@ echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 
 if [ ! -e /jz_tune ]; then
 	mkdir /jz_tune;
-	$BB chmod -R 777 /jz_tune;
-	$BB ln -s /sys/devices/system/cpu/cpu0/cpufreq/ /jz_tune/cpufreq;
-	$BB ln -s /sys/module/msm_thermal/parameters/ /jz_tune/thermal;
-	$BB ln -s /sys/kernel/alucard_hotplug/ /jz_tune/alucard;
+	chmod -R 777 /jz_tune;
+	ln -s /sys/devices/system/cpu/cpu0/cpufreq/ /jz_tune/cpufreq;
+	ln -s /sys/module/msm_thermal/parameters/ /jz_tune/thermal;
+	ln -s /sys/kernel/alucard_hotplug/ /jz_tune/alucard;
 fi;
 
 
-$BB chown system /sys/devices/system/cpu/cpu0/cpufreq/*
-$BB chown system /sys/devices/system/cpu/cpu1/online
-$BB chown system /sys/devices/system/cpu/cpu2/online
-$BB chown system /sys/devices/system/cpu/cpu3/online
-$BB chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-$BB chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-$BB chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-$BB chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
-$BB chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/stats/*
-$BB chmod 666 /sys/devices/system/cpu/cpu1/online
-$BB chmod 666 /sys/devices/system/cpu/cpu2/online
-$BB chmod 666 /sys/devices/system/cpu/cpu3/online
-$BB chmod 666 /sys/module/msm_thermal/parameters/*
-$BB chmod 666 /sys/class/kgsl/kgsl-3d0/max_gpuclk
+chown system /sys/devices/system/cpu/cpu0/cpufreq/*
+chown system /sys/devices/system/cpu/cpu1/online
+chown system /sys/devices/system/cpu/cpu2/online
+chown system /sys/devices/system/cpu/cpu3/online
+chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+chmod 666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/stats/*
+chmod 666 /sys/devices/system/cpu/cpu1/online
+chmod 666 /sys/devices/system/cpu/cpu2/online
+chmod 666 /sys/devices/system/cpu/cpu3/online
+chmod 666 /sys/module/msm_thermal/parameters/*
+chmod 666 /sys/class/kgsl/kgsl-3d0/max_gpuclk
 
 # tune I/O controls to boost I/O performance
 echo "0" > /sys/devices/msm_sdcc.1/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue/add_random;
@@ -248,29 +247,42 @@ echo "256" > /proc/sys/kernel/random/write_wakeup_threshold;
 # Enable Power modes
 echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
-if [ -d /system/etc/init.d ]; then
-    chmod 755 /system/etc/init.d/*
-    busybox run-parts /system/etc/init.d/
+if [ ! -d /system/etc/init.d ]; then
+	mkdir /system/etc/init.d;
 fi
+chmod 755 /system/etc/init.d/*
+busybox run-parts /system/etc/init.d/
 
 mount -o remount,rw /;
 mount -o remount,rw, /system;
 
 # stop google service and restart it on boot. this remove high cpu load and ram leak!
-if [ "$($BB pidof com.google.android.gms | wc -l)" -eq "1" ]; then
-	$BB kill $($BB pidof com.google.android.gms);
+if [ "$(pidof com.google.android.gms | wc -l)" -eq "1" ]; then
+	kill $(pidof com.google.android.gms);
 fi;
-if [ "$($BB pidof com.google.android.gms.unstable | wc -l)" -eq "1" ]; then
-	$BB kill $($BB pidof com.google.android.gms.unstable);
+if [ "$(pidof com.google.android.gms.unstable | wc -l)" -eq "1" ]; then
+	kill $(pidof com.google.android.gms.unstable);
 fi;
-if [ "$($BB pidof com.google.android.gms.persistent | wc -l)" -eq "1" ]; then
-	$BB kill $($BB pidof com.google.android.gms.persistent);
+if [ "$(pidof com.google.android.gms.persistent | wc -l)" -eq "1" ]; then
+	kill $(pidof com.google.android.gms.persistent);
 fi;
-if [ "$($BB pidof com.google.android.gms.wearable | wc -l)" -eq "1" ]; then
-	$BB kill $($BB pidof com.google.android.gms.wearable);
+if [ "$(pidof com.google.android.gms.wearable | wc -l)" -eq "1" ]; then
+	kill $(pidof com.google.android.gms.wearable);
 fi;
 
 setprop windowsmgr.max_events_per_sec 240;
 # make sure bq24296 iusb was no limited
 echo 2000 > /sys/module/bq24296_charger/parameters/iusb_control;
+
+# sharpe control
+chmod 0755 /sbin/sharpening
+if [ -e /data/sp_cm ];then
+	chmod 0755 /data/sp_cm;
+	input keyevent 26;
+	sleep 1;
+	input keyevent 26;
+	echo `cat /data/sp_cm` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+fi
+# sharpe control
+
 exit;
