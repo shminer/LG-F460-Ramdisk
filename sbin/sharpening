@@ -1,0 +1,11 @@
+if [ -e /data/sp_cm ];then
+	sharpening_level=`cat /data/sp_cm`;
+fi
+
+if [[ ! -z ${1} ]];then
+	if [ ! -e /data/sp_cm ];then
+		touch /data/sp_cm;
+	fi
+	echo ${1} > /data/sp_cm;
+	echo ${1} > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+fi
