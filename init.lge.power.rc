@@ -28,32 +28,6 @@
 
 import /init.${ro.hardware}.power.rc
 
-# chargerlogo
-on chargerlogo
-   trigger early-fs
-   trigger fs
-   trigger post-fs
-   trigger post-fs-data
-   trigger load_all_props_action
-   trigger chargerlogo_exec
-
-on chargerlogo_exec
-   setprop persist.service.kernel.enable 4
-   start log-kernel
-   stop bootanim
-   write /sys/class/android_usb/android0/enable 0
-   write /sys/class/android_usb/android0/idVendor 1004
-   write /sys/class/android_usb/android0/idProduct 6300
-   write /sys/class/android_usb/android0/bDeviceClass 0
-   write /sys/class/android_usb/android0/bDeviceSubClass 0
-   write /sys/class/android_usb/android0/bDeviceProtocol 0
-   write /sys/class/android_usb/android0/functions charge_only
-   write /sys/class/android_usb/android0/enable 1
-   write /persist-lg/chargerlogo/autoboot_nosound 0
-   chmod 0666 /persist-lg/chargerlogo/autoboot_nosound
-
-   exec u:r:chargerlogo:s0 -- /sbin/chargerlogo
-
 # smpl_count
 service smpl_count /system/bin/smpl_count
    class main
