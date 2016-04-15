@@ -1,3 +1,7 @@
+#!/sbin/busybox sh
+
+BB=/sbin/busybox;
+
 #APQ8084 tune
 echo 4 > /sys/module/lpm_levels/enable_low_power/l2
 echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
@@ -276,12 +280,12 @@ echo 2000 > /sys/module/bq24296_charger/parameters/iusb_control;
 
 # sharpe control
 chmod 0755 /sbin/sharpening
-if [ -e /data/sp_cm ];then
-	chmod 0755 /data/sp_cm;
+if [ -e /data/.jz_sy/sharpening ];then
+	chmod 0755 /data/.jz_sy/sharpening;
 	input keyevent 26;
 	sleep 1;
 	input keyevent 26;
-	echo `cat /data/sp_cm` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+	echo `cat /data/.jz_sy/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
 fi
 # sharpe control
 
