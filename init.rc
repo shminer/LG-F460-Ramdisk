@@ -10,8 +10,8 @@ import /init.${ro.hardware}.rc
 import /init.usb.configfs.rc
 import /init.${ro.zygote}.rc
 import /init.trace.rc
-# Include MK's extra init file
-import /init.mk.rc
+# Include MK's && MK's extra init file
+import /init.mk-cm.rc
 
 
 on early-init

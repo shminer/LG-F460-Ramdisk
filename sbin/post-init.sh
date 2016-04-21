@@ -142,13 +142,16 @@ if [ ! -e /system/etc/busybox_installed ];then
 	cd /system/bin/;
 	CLEAN_BUSYBOX;
 
+	cd /sbin/;
+	CLEAN_BUSYBOX;
+
 	cd /;
 
 	# Install latest busybox to ROM
 	cp /sbin/busybox /system/xbin/;
 
 	/system/xbin/busybox --install -s /system/xbin/
-
+	/system/xbin/busybox --install -s /sbin/
 	chmod 06755 /system/xbin/busybox;
 
 	touch /system/etc/busybox_installed;

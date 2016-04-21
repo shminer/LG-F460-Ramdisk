@@ -136,6 +136,7 @@ themes                                    u:object_r:themes_service:s0
 torch                                     u:object_r:torch_service:s0
 killswitch                                u:object_r:kill_switch_service:s0
 mkstatusbar                               u:object_r:mk_status_bar_service:s0
+cmstatusbar                               u:object_r:cm_status_bar_service:s0
 profile                                   u:object_r:mk_profile_service:s0
 mkpartnerinterface                        u:object_r:mk_partner_interface:s0
 mktelephonymanager                        u:object_r:mk_telephony_service:s0
@@ -145,4 +146,13 @@ mkthemes                                  u:object_r:mk_themes_service:s0
 mkiconcache                               u:object_r:mk_iconcache_service:s0
 mklivelockscreen                          u:object_r:mk_livelockscreen_service:s0
 mkweather                                 u:object_r:mk_weather_service:s0
-mklivedisplay                             u:object_r:mk_livedisplay_service:s0               
+mklivedisplay                             u:object_r:mk_livedisplay_service:s0   
+cmpartnerinterface                        u:object_r:cm_partner_interface:s0
+cmtelephonymanager                        u:object_r:cm_telephony_service:s0
+cmhardware                                u:object_r:cm_hardware_service:s0
+cmappsuggest                              u:object_r:cm_app_suggest_service:s0
+cmperformance                             u:object_r:cm_performance_service:s0
+cmthemes                                  u:object_r:cm_themes_service:s0
+cmiconcache                               u:object_r:cm_iconcache_service:s0
+cmlivelockscreen                          u:object_r:cm_livelockscreen_service:s0
+cmweather                                 u:object_r:cm_weather_service:s0            
