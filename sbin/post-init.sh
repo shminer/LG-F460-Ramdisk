@@ -283,12 +283,13 @@ echo 2000 > /sys/module/bq24296_charger/parameters/iusb_control;
 
 # sharpe control
 chmod 0755 /sbin/sharpening
-if [ -e /data/.jz_sy/sharpening ];then
+if [ -e /data/.jz_sy/sharpening ] || [ ! -e /bootC ];then
 	chmod 0755 /data/.jz_sy/sharpening;
 	input keyevent 26;
 	sleep 1;
 	input keyevent 26;
 	echo `cat /data/.jz_sy/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+	touch /bootC;
 fi
 # sharpe control
 

@@ -59,7 +59,7 @@ cat << CTAG
 					max:40,
 					step:1,
 					default:`$BB cat /sys/devices/virtual/graphics/fb0/lge_sharpening_level`,
-					action:"sharpening /sys/devices/virtual/graphics/fb0/lge_sharpening_level"
+					action:"sharpening_ctl /sys/devices/virtual/graphics/fb0/lge_sharpening_level"
 			}},
 			{ STitleBar:{
 				title:"无线ADB",
