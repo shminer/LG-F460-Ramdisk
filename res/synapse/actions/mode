@@ -34,7 +34,7 @@ get_Ulow()
 	temp_safety=1;
 	freq_step=2;
 	thermal_limit_low=8;
-	core_limit_temp_degC=68;
+	core_limit_temp_degC=70;
 	core_control_mask=12;
 }
 
@@ -48,7 +48,7 @@ get_low()
 	cpu_min_freq=300000;
 	input_boost_freq=1497600; #此值从cpu可见频率查看
 	power_efficient=Y;
-	maxcoreslimit=4;
+	maxcoreslimit=3;
 	
 	#cache
 	bw_max_freq=12145; #此值从bw可见频率查看
@@ -193,8 +193,8 @@ set_mode()
 	${command_fo}/intellithermal thermalserver ${thermal-engine_control};
 	
 	#cpu
-	wr_sys /sys/kernel/msm_limiter/limit_max_freq ${cpu_max_freq};
-	wr_sys /sys/kernel/msm_limiter/limit_min_freq ${cpu_min_freq};
+	wr_sys /sys/kernel/msm_limiter/resume_max_freq ${cpu_max_freq};
+	wr_sys /sys/kernel/msm_limiter/suspend_min_freq ${cpu_min_freq};
 	wr_sys /sys/module/cpu_boost/parameters/input_boost_freq ${input_boost_freq};
 	wr_sys /sys/module/workqueue/parameters/power_efficient ${power_efficient};
 	wr_sys /sys/kernel/msm_mpdecision/conf/enabled 0;
