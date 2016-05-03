@@ -275,7 +275,7 @@ setprop windowsmgr.max_events_per_sec 240;
 echo 2000 > /sys/module/bq24296_charger/parameters/iusb_control;
 
 # sharpe control
-if [ -e /data/.jz_sy/sharpening ] || [ ! -e /bootC ];then
+if [ -e /data/.jz_sy/sharpening ] && [ ! -e /bootC ];then
     chmod 0755 /data/.jz_sy/sharpening;
     input keyevent 26;
     sleep 1;
