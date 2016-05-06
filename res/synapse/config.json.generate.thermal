@@ -18,11 +18,6 @@ cat << CTAG
 					$BB echo '	{ SPane:{
 						title:"intelli智能温控",
 					}},
-				{ SCheckBox:{
-					label:"intelli温控总开关",
-					description:"和高通温控不同，intelli智能温控使用内核控制，由JZ_shminer优化温控核心算法，在高通内核温控的基础上加入了动态温控判断以及极限值，首次在高通处理器上实现温控步控法，代替高通一拉到底的温控算法。",
-					action:"intellithermal ITE"
-						}},'
 				fi
 				if [ -f "$MSMTHERMAL/parameters/thermal_debug_mode" ]; then
 				TDM=\`$BB cat $MSMTHERMAL/parameters/thermal_debug_mode\`;
