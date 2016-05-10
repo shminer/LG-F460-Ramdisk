@@ -213,8 +213,16 @@ echo 256 > /sys/devices/platform/kcal_ctrl.0/kcal_val;
 # Install Busybox
 /sbin/busybox --install -s /sbin
 
-ln -s /res/synapse/uci /sbin/uci
-/sbin/uci
+# Check synapse language
+if [ -e /data/.jz_sy/language ];then
+	if [ "`cat /data/.jz_sy/language`" == "en" ] ;then
+		./res/synapse/en/actions/language en
+	else
+		./res/synapse/zh/actions/language zh
+	fi
+else
+	./res/synapse/en/actions/language en
+fi
 
 if [ ! -e /data/.selinux_disabled ]; then
 	setenforce 0
