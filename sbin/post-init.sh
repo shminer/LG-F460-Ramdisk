@@ -223,7 +223,7 @@ if [ -e /data/.jz_sy/language ];then
 		/res/zh/actions/language zh
 	fi
 else
-	/res/synapse/en/actions/language en
+	/res/en/actions/language en
 fi
 
 if [ ! -e /data/.selinux_disabled ]; then
