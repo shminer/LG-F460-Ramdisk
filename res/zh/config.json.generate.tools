@@ -1,0 +1,89 @@
+cat << CTAG
+{
+	name:实用工具,
+		elements:[
+			{ SPane:{
+				title:"高级工具"
+			}},
+				{ SDescription:{
+					description:"以下按钮将 整理/重索引 DATA 分区的数据库，提高数据读写性能，注意：此操作需时 1-2分钟。"
+				}},
+				{ SButton:{
+					label:"优化数据库",
+					action:"devtools optimizedb"
+				}},
+			{ SPane:{
+				title:"保存日志"
+			}},
+				`if [ -f "/sys/module/logger/parameters/enabled" ]; then
+				LOGMODE=\`$BB cat /sys/module/logger/parameters/enabled\`
+					$BB echo '{ SOptionList:{
+						title:"Logcat Mode",
+						description:"Allows you to toggle the logcat mode.",
+						default:'$LOGMODE',
+						action:"generic /sys/module/logger/parameters/enabled",
+						values:{
+							0:"Disabled", 1:"Enabled"
+						}
+					}},'
+				fi`
+				`if [ -f "/sys/module/logger/parameters/log_mode" ]; then
+				LOGMODE=\`$BB cat /sys/module/logger/parameters/log_mode\`
+					$BB echo '{ SOptionList:{
+						title:"Log Mode",
+						description:"Allows you to toggle the log mode.",
+						default:'$LOGMODE',
+						action:"generic /sys/module/logger/parameters/log_mode",
+						values:{
+							0:"Enabled", 1:"Auto Suspend", 2:"Disabled"
+						}
+					}},'
+				fi`
+				`if [ -f "/sys/kernel/printk_mode/printk_mode" ]; then
+					$BB echo '{ SOptionList:{
+						title:"Kernel Logger",
+						description:"Allows you to toggle dmesg kernel logging.",
+						action:"printk /sys/kernel/printk_mode/printk_mode",
+						values:{
+							0:"Disabled", 1:"Enabled"
+						}
+					}},'
+				fi`
+				{ SButton:{
+					label:"保存安卓日至",
+					action:"devtools logcat"
+				}},
+				{ SButton:{
+					label:"保存当前内核日至",
+					action:"devtools dmesg"
+				}},
+				{ SButton:{
+					label:"保存上次内核日至",
+					action:"devtools kmsg"
+				}},
+			{ SPane:{
+				title:"一般操作",
+				description:"如果要更新文件列表，点击重启Synpase。如果程序不正常，清空Synapse数据可以修复一些未知问题."
+			}},
+				{ SButton:{
+					label:"重启 Synapse",
+					action:"restorebackup restart"
+				}},
+				{ SButton:{
+					label:"清除 Synapse 数据",
+					action:"devtools cleardata"
+				}},
+			{ STitleBar:{
+				title:"重新启动"
+			}},
+				{ SButton:{
+					label:"重启设备",
+					action:"devtools reboot"
+				}},
+				{ SButton:{
+					label:"恢复模式",
+					action:"devtools reboot recovery"
+				}},
+		]
+}
+CTAG

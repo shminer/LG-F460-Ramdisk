@@ -1,0 +1,125 @@
+cat << CTAG
+{
+	name:GPU设置,
+		elements:[
+			{ SPane:{
+				title:"GPU 当前频率:"
+			}},
+				{ SLiveLabel:{
+					refresh:1000,
+					action:"live GPUFrequency"
+				}},
+			{ SPane:{
+				title:"GPU 频率调节",
+			}},
+			`if [ -f "\`sh $DEVICE DirGPUMaxFrequency\`" ]; then
+				GPUMAX=\`sh $DEVICE DirGPUMaxFrequency\`
+					$BB echo '{ SSeekBar:{
+						title:"GPU 最高频率",
+						description:"设定 GPU 负载时的最高工作频率。",
+						default:'\`$BB cat $GPUMAX\`',
+						action:"generic '$GPUMAX'",
+						values:{
+								0:"683Mhz",1:"600Mhz",2:"550Mhz",
+								3:"500Mhz",4:"389Mhz",5:"300Mhz",
+								6:"240Mhz",7:"100Mhz"
+						}
+				}},'
+			fi`
+			`if [ -f "\`sh $DEVICE DirGPUGovernor\`" ]; then
+			GPUGOV=\`sh $DEVICE DirGPUGovernor\`
+				$BB echo '{ SPane:{
+					title:"GPU 调速器",
+					description:"GPU 调速器会根据制定的 2D/3D 互动情景去调节使用策略。"
+				}},
+					{ SOptionList:{
+						default:'\`sh $DEVICE DefaultGPUGovernor\`',
+						action:"gpuset '$GPUGOV'",
+						values:[ "msm-adreno-tz", "simple_ondemand", "powersave", "performance" ],
+					}},'
+			fi`
+			`SGA=/sys/module/msm_kgsl_core/parameters;
+			if [ -f "$SGA/simple_laziness" ] || [ -f "$SGA/simple_ramp_threshold" ] || [ -d "/sys/module/simple_gpu_algorithm/parameters" ]; then
+
+			[ -d "/sys/module/simple_gpu_algorithm/parameters" ] && SGA=/sys/module/simple_gpu_algorithm/parameters;
+			
+				$BB echo '{ SPane:{
+					title:"简单调速器"
+				}},'
+				if [ -f "$SGA/simple_gpu_activate" ]; then
+					SIMPLE=\`$BB cat $SGA/simple_gpu_activate\`
+					$BB echo '{ SCheckBox:{
+						label:"启用",
+						description:"MSM Adreno TZ GPU 调速器附加的设置。由 faux123 提供。",
+						default:'$SIMPLE',
+						action:"generic '$SGA'/simple_gpu_activate"
+					}},'
+				fi
+				if [ -f "$SGA/simple_laziness" ]; then
+					LAZ=\`$BB cat $SGA/simple_laziness\`
+					$BB echo '{ SSeekBar:{
+						title:"积极性",
+						description:"调节调速器忽略降速请求的次数，数值越低性能越好，同时电池续航越短。",
+						default:'$LAZ',
+						action:"generic '$SGA'/simple_laziness",
+						min:0,
+						max:10,
+						step:1
+					}},'
+				fi
+				if [ -f "$SGA/simple_ramp_threshold" ]; then
+					RAMP=\`$BB cat $SGA/simple_ramp_threshold\`
+					$BB echo '{ SSeekBar:{
+						title:"频率阈值",
+						description:"调节控制 GPU 频率升降的阈值，数值越低性能越好，同时电池续航越短。",
+						default:'$RAMP',
+						action:"generic '$SGA'/simple_ramp_threshold",
+						min:0,
+						max:10000,
+						step:1000
+					}},'
+				fi
+			fi`
+			`if [ -f "/sys/module/adreno_idler/parameters/adreno_idler_active" ]; then
+				IDLER=\`bool /sys/module/adreno_idler/parameters/adreno_idler_active\`
+				IDLELOC=/sys/module/adreno_idler/parameters;
+					$BB echo '{ SPane:{
+						title:"Adreno_Idler 调速器"
+					}},
+						{ SCheckBox:{
+							label:"启用",
+							description:"MSM Adreno TZ GPU 调速器附加的设置。由 arter97 提供。",
+							default:'$IDLER',
+							action:"boolean /sys/module/adreno_idler/parameters/adreno_idler_active"
+						}},'
+							$BB echo '{ SSeekBar:{
+							title:"降低阈值",
+							description:"增加这个值idler开始降频的可能性越小，反之增大，越小越省电。 ",
+							default:'\`cat $IDLELOC/adreno_idler_downdifferential\`',
+							action:"generic '$IDLELOC'/adreno_idler_downdifferential",
+							min:0,
+							max:100,
+							step:1
+						}},'
+							$BB echo '{ SSeekBar:{
+							title:"Idle 等待时间",
+							description:"当负载降低后，idler将进入降频状态的等待时间，这个值越低，开始降频的延迟越短，越省电。",
+							default:'\`cat $IDLELOC/adreno_idler_idlewait\`',
+							action:"generic '$IDLELOC'/adreno_idler_idlewait",
+							min:0,
+							max:100,
+							step:1
+						}},'
+							$BB echo '{ SSeekBar:{
+							title:"Idle 积极程度",
+							description:"这个值越高，GPU能越弱，越省电，idler会更多的降低gpu频率。",
+							default:'\`cat $IDLELOC/adreno_idler_idleworkload\`',
+							action:"generic '$IDLELOC'/adreno_idler_idleworkload",
+							min:0,
+							max:10000,
+							step:1000
+						}},'
+			fi`
+		]
+}
+CTAG

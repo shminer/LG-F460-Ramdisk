@@ -1,0 +1,167 @@
+cat << CTAG
+{
+		name:CPU设置,
+			elements:[
+					{ SPane:{
+						title:"CPU当前频率:"
+					}},
+					{ SLiveLabel:{
+						refresh:1000,
+						action:"live CPU_CUR_Freq"
+					}},
+					{ STitleBar:{
+						title:"CPU频率调节"
+					}},
+					`if [ -f "/sys/kernel/msm_limiter/resume_max_freq" ]; then
+						$BB echo '{ SSeekBar:{
+							title:"CPU 最高频率 (全局)",
+							description:"设定 CPU 负载时的最高工作频率。频率可受到thermal影响。",
+							default:'\`$BB cat /sys/kernel/msm_limiter/resume_max_freq\`',
+							action:"generic /sys/kernel/msm_limiter/resume_max_freq",
+							values:{'
+								sh $DEVICE CPUFrequencyList
+							$BB echo '}
+						}},'
+					fi`
+					`if [ -f "/sys/kernel/msm_limiter/suspend_min_freq" ]; then
+						$BB echo '{ SSeekBar:{
+							title:"CPU 最低频率 (全局)",
+							description:"设定 CPU 负载时的最低工作频率。频率可受到thermal影响。",
+							default:'\`$BB cat /sys/kernel/msm_limiter/suspend_min_freq\`',
+							action:"generic /sys/kernel/msm_limiter/suspend_min_freq",
+							values:{'
+								sh $DEVICE CPUFrequencyList
+							$BB echo '}
+						}},'
+					fi`
+					`if [ -f "/sys/kernel/msm_limiter/suspend_max_freq" ]; then
+						$BB echo '{ SSeekBar:{
+							title:"关屏最大CPU频率",
+							description:"设定屏幕关闭后，CPU可达到的最大频率。",
+							default:'\`$BB cat /sys/kernel/msm_limiter/suspend_max_freq\`',
+							action:"generic /sys/kernel/msm_limiter/suspend_max_freq",
+							values:{'
+								sh $DEVICE CPUFrequencyList
+							$BB echo '}
+						}},'
+					fi`
+					`if [ -f "/sys/module/cpu_boost/parameters/input_boost_ms" ]; then
+					SYNCT=\`$BB cat /sys/module/cpu_boost/parameters/input_boost_ms\`
+						$BB echo '{ SSeekBar:{
+								title:"触摸提速",
+								description:"当检测到有触摸动作时 CPU 升频的最小间隔 。",
+								unit:" ms",
+								min:0,
+								max:5000,
+								step:10,
+								default:'$SYNCT',
+								action:"generic /sys/module/cpu_boost/parameters/input_boost_ms"
+						}},'
+					fi
+					if [ -f "/sys/module/cpu_boost/parameters/input_boost_freq" ]; then
+					VALUE=0; for i in \`$BB cat /sys/module/cpu_boost/parameters/input_boost_freq\`; do VALUE=$(($VALUE+1)); done;
+						if [ $VALUE -eq 1 ]; then
+							IBF=\`$BB cat /sys/module/cpu_boost/parameters/input_boost_freq\`
+							
+							$BB echo '{ SSeekBar:{
+								title:"触摸频率",
+								description:"当触摸屏幕或按建时，提升到优化的输入 CPU 频率。",
+								default:'$IBF',
+								action:"generic /sys/module/cpu_boost/parameters/input_boost_freq",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},'
+						elif [ $VALUE -eq 4 ]; then
+							$BB echo '{ SSeekBar:{
+								title:"CPU0 输入优化频率",
+								description:"当触摸屏幕或按建时，提升到优化的输入 CPU0 频率。",
+								action:"cpuboostibf 0",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},
+							{ SSeekBar:{
+								title:"CPU1 输入优化频率",
+								description:"当触摸屏幕或按建时，提升到优化的输入 CPU1 频率。",
+								action:"cpuboostibf 1",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},
+							{ SSeekBar:{
+								title:"CPU2 输入优化频率",
+								description:"当触摸屏幕或按建时，提升到优化的输入 CPU2 频率。",
+								action:"cpuboostibf 2",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},
+							{ SSeekBar:{
+								title:"CPU3 输入优化频率",
+								description:"当触摸屏幕或按建时，提升到优化的输入 CPU3 频率。",
+								action:"cpuboostibf 3",
+								values:{ 0:"Disabled", '
+									sh $DEVICE CPUFrequencyList
+								$BB echo '}
+							}},'
+						fi;
+					fi;
+				fi`
+				`if [ -f "/sys/module/workqueue/parameters/power_efficient" ]; then
+				PE=\`bool /sys/module/workqueue/parameters/power_efficient\`
+					$BB echo '{ SPane:{
+						title:"高效能工作队列",
+					}},
+						{ SCheckBox:{
+							label:"启用",
+							description:"这个选项只付出轻微的性能而助于降低整体的功耗，处理引擎中的未绑定的工作队列将都交由 CPU0 处理以节省其他核心的功耗。",
+							default:'$PE',
+							action:"boolean /sys/module/workqueue/parameters/power_efficient",
+						}},'
+				fi`
+			{ SPane:{
+				title:"CPU 调速器",
+				description:"CPU 调速器会根据设定的策略去响应和处理不同的工作负载。更多信息请点击 : <a href='http://timos.me/tm/wiki/cpugovernors'>HERE</a>"
+			}},
+				`if [ -f "/sys/kernel/msm_limiter/scaling_governor" ]; then
+					$BB echo '{ SOptionList:{
+						title:"CPU 调速器（全局）",
+						description:"如果更改调速器需要重启进入synapse调整",
+						default:'\`$BB cat /sys/kernel/msm_limiter/scaling_governor\`',
+						action:"generic /sys/kernel/msm_limiter/scaling_governor",
+						values:['
+							sh $DEVICE CPUGovernorList
+						$BB echo '],
+					}},'
+				fi`
+			{ SPane:{
+				title:"CPU 调速器策略调整。"
+			}},
+				{ STreeDescriptor:{
+					path:"`sh $DEVICE DirCPUGovernorTree`",
+					generic: {
+						directory: {
+							STreeDescriptor:{
+								generic: {
+									directory: {},
+									element: {
+										SGeneric: { title:"@BASENAME" }
+									}
+								},
+								exclude: [ 
+									"boost_duration", "boostpulse", "cpu_utilization", "multi_phase_freq_tbl", "profile",
+									"up_threshold_h", "up_threshold_l", "version_profiles", "sampling_rate_current", "freq_limit",
+									"music_state", "inputboost_punch_cycles", "inputboost_punch_freq", "inputboost_punch_on_epenmove",
+									"inputboost_punch_on_fingerdown", "inputboost_punch_on_fingermove", "auto_adjust_freq_thresholds",
+									"version", "early_demand", "fast_scaling_up", "fast_scaling_down", "fast_scaling_sleep_up", "fast_scaling_sleep_down"
+									"scaling_up_block_freq", "scaling_block_freq", "inputboost_typingbooster_cores", "music_max_freq", "music_min_freq"
+								]
+							},
+						}
+					},
+					exclude: [ "all_cpus", "kset", "overall_stats", "stats", "vdd_table" ]
+				}},
+		]
+}
+CTAG

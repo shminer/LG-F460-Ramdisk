@@ -213,6 +213,8 @@ echo 256 > /sys/devices/platform/kcal_ctrl.0/kcal_val;
 # Install Busybox
 /sbin/busybox --install -s /sbin
 
+chmod +x /res/synapse/en/actions/language
+chmod +x /res/synapse/zh/actions/language
 # Check synapse language
 if [ -e /data/.jz_sy/language ];then
 	if [ "`cat /data/.jz_sy/language`" == "en" ] ;then
