@@ -23,6 +23,10 @@ ln -s /res/synapse/uci /sbin/uci
 chmod +x /sbin/uci
 /sbin/uci
 
-am force-stop com.af.synapse 2> /dev/null;
-sleep 1;
-am start -a android.intent.action.MAIN -n com.af.synapse/.MainActivity 2> /dev/null;
+if [ -e /first_boot ];then
+	am force-stop com.af.synapse 2> /dev/null;
+	sleep 1;
+	am start -a android.intent.action.MAIN -n com.af.synapse/.MainActivity 2> /dev/null;
+fi
+
+touch /first_boot

@@ -213,17 +213,17 @@ echo 256 > /sys/devices/platform/kcal_ctrl.0/kcal_val;
 # Install Busybox
 /sbin/busybox --install -s /sbin
 
-chmod +x /res/synapse/en/actions/language
-chmod +x /res/synapse/zh/actions/language
+chmod +x /res/en/actions/language
+chmod +x /res/zh/actions/language
 # Check synapse language
 if [ -e /data/.jz_sy/language ];then
 	if [ "`cat /data/.jz_sy/language`" == "en" ] ;then
-		./res/synapse/en/actions/language en
+		/res/en/actions/language en
 	else
-		./res/synapse/zh/actions/language zh
+		/res/zh/actions/language zh
 	fi
 else
-	./res/synapse/en/actions/language en
+	/res/synapse/en/actions/language en
 fi
 
 if [ ! -e /data/.selinux_disabled ]; then
@@ -262,9 +262,6 @@ if [ -d /system/etc/init.d ]; then
     chmod 755 /system/etc/init.d/*
     busybox run-parts /system/etc/init.d/
 fi
-
-mount -o remount,rw /;
-mount -o remount,rw, /system;
 
 # stop google service and restart it on boot. this remove high cpu load and ram leak!
 if [ "$($BB pidof com.google.android.gms | wc -l)" -eq "1" ]; then
