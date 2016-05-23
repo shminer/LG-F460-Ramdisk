@@ -3,13 +3,13 @@ if [ ! -d  /data/.jz_sy ];then
 	mkdir /data/.jz_sy
 fi
 
-if [ -e /data/.jz_sy/set_sharpe ];then
-	sharpening_level=`cat /data/.jz_sy/set_sharpe`;
+if [ -e /data/.jz_sy/sharpening ];then
+	sharpening_level=`cat /data/.jz_sy/sharpening`;
 fi
 
 if [[ ! -z ${1} ]];then
-	if [ ! -e /data/.jz_sy/set_sharpe ];then
-		touch /data/.jz_sy/set_sharpe;
+	if [ ! -e /data/.jz_sy/sharpening ];then
+		touch /data/.jz_sy/sharpening;
 	fi
 	if [ ! -e /bootC ];then
 		input keyevent 26;
@@ -17,6 +17,6 @@ if [[ ! -z ${1} ]];then
 		input keyevent 26;
 		touch /bootC;
 	fi
-	echo ${1} > /data/.jz_sy/set_sharpe;
+	echo ${1} > /data/.jz_sy/sharpening;
 	echo ${1} > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
 fi
