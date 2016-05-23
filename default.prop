@@ -15,7 +15,7 @@ debug.atrace.tags.enableflags=0
 #
 # BOOTIMAGE_BUILD_PROPERTIES
 #
-ro.bootimage.build.date=2016年 04月 15日 星期五 09:07:18 CST
-ro.bootimage.build.date.utc=1460682438
-ro.bootimage.build.fingerprint=lge/mk_f460/f460:6.0.1/MHC19Q/6d05b2daa2:userdebug/test-keys
+ro.bootimage.build.date=Mon May 23 05:27:21 CST 2016
+ro.bootimage.build.date.utc=1463952441
+ro.bootimage.build.fingerprint=lge/mk_f460/f460:6.0.1/MOB30J/6377c090e3:userdebug/test-keys
 persist.sys.usb.config=none
