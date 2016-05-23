@@ -1,0 +1,40 @@
+
+mount -o remount,rw /
+
+if [ ! -d  /data/.jz_sy ];then
+	mkdir /data/.jz_sy
+fi
+
+set_check()
+{
+	if [ -e /data/.jz_sy/set_sharpe ];then
+		if [ ! -e /bootC ];then
+			input keyevent 26;
+			sleep 1;
+			input keyevent 26;
+			touch /bootC;
+		fi
+	fi
+}
+
+if [[ ! -z $1 ]];then
+	if [ "$1" == "1" ];then
+		touch /data/.jz_sy/set_sharpe;
+		set_check;
+		echo `cat /data/.jz_sy/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+	fi
+
+	if [ "$1" == "0" ];then
+		set_check;
+		echo 40 > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+		if [ -e /data/.jz_sy/set_sharpe ];then
+			rm /data/.jz_sy/set_sharpe;
+		fi
+	fi
+fi
+
+if [ -e /data/.jz_sy/set_sharpe ];then
+	echo "1";
+else
+	echo "0";
+fi

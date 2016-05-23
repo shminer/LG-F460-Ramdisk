@@ -2,13 +2,17 @@ cat << CTAG
 {
 		name:JZ内核页面,
 			elements:[
+				{ SButton:{
+					label:"Switch to english",
+					action:"language en"
+				}},
 				{ SPane:{
-					title:"Linux版本  JZ内核版本4.3",
+					title:"Linux版本  JZ内核版本 `expr substr $(cat /cur_ver) 1 1`.`expr substr  $(cat /cur_ver) 2 1`",
 					description:"`$BB cat /proc/version`"
 				}},
 				{ SPane:{
 					title:"捐赠",
-					description:"如果你对这个内核很满意，可以通过支付宝捐助我。支付宝账号:3.2574643@qq.com."
+					description:"如果你对这个内核很满意，可以通过支付宝捐助我。支付宝账号:332574643@qq.com."
 				}},
 				{ SPane:{
 					title:"模式切换",

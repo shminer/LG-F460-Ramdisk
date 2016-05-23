@@ -1,0 +1,32 @@
+#!/sbin/busybox sh
+
+mount -o remount,rw /
+
+if [ ! -d  /data/.jz_sy ];then
+	mkdir /data/.jz_sy
+fi
+
+if [ ! -e /data/.jz_sy/language ];then
+	touch /data/.jz_sy/language;
+fi
+
+if [ ! -d /res/synapse ];then
+	mkdir /res/synapse;
+fi
+
+echo "切换为 ${1}"
+rm -R /res/synapse/*
+cp -a /res/${1}/* /res/synapse
+echo "${1}" > /data/.jz_sy/language
+chmod +x /res/synapse/uci
+ln -s /res/synapse/uci /sbin/uci
+chmod +x /sbin/uci
+/sbin/uci
+
+if [ -e /first_boot ];then
+	am force-stop com.af.synapse 2> /dev/null;
+	sleep 1;
+	am start -a android.intent.action.MAIN -n com.af.synapse/.MainActivity 2> /dev/null;
+fi
+
+touch /first_boot

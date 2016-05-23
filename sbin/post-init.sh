@@ -219,8 +219,18 @@ echo 256 > /sys/devices/platform/kcal_ctrl.0/kcal_val;
 # Install Busybox
 /sbin/busybox --install -s /sbin
 
-ln -s /res/synapse/uci /sbin/uci
-/sbin/uci
+chmod +x /res/en/actions/language
+chmod +x /res/zh/actions/language
+# Check synapse language
+if [ -e /data/.jz_sy/language ];then
+	if [ "`cat /data/.jz_sy/language`" == "en" ] ;then
+		/res/en/actions/language en
+	else
+		/res/zh/actions/language zh
+	fi
+else
+	/res/en/actions/language en
+fi
 
 if [ ! -e /data/.selinux_disabled ]; then
 	setenforce 0
@@ -260,8 +270,6 @@ fi
 chmod 755 /system/etc/init.d/*
 busybox run-parts /system/etc/init.d/
 
-mount -o remount,rw /;
-mount -o remount,rw, /system;
 
 # stop google service and restart it on boot. this remove high cpu load and ram leak!
 if [ "$(pidof com.google.android.gms | wc -l)" -eq "1" ]; then
@@ -283,13 +291,13 @@ echo 2000 > /sys/module/bq24296_charger/parameters/iusb_control;
 
 # sharpe control
 chmod 0755 /sbin/sharpening
-if [ -e /data/.jz_sy/sharpening ] || [ ! -e /bootC ];then
-	chmod 0755 /data/.jz_sy/sharpening;
-	input keyevent 26;
-	sleep 1;
-	input keyevent 26;
-	echo `cat /data/.jz_sy/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
-	touch /bootC;
+if [ -e /data/.jz_sy/sharpening ] && [ ! -e /bootC ];then
+    chmod 0755 /data/.jz_sy/sharpening;
+    input keyevent 26;
+    sleep 1;
+    input keyevent 26;
+    echo `cat /data/.jz_sy/sharpening` > /sys/devices/virtual/graphics/fb0/lge_sharpening_level;
+    touch /bootC;
 fi
 # sharpe control
 
