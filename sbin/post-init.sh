@@ -258,10 +258,12 @@ echo "256" > /proc/sys/kernel/random/write_wakeup_threshold;
 # Enable Power modes
 echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
-if [ -d /system/etc/init.d ]; then
-    chmod 755 /system/etc/init.d/*
-    busybox run-parts /system/etc/init.d/
+if [ ! -d /system/etc/init.d ]; then
+	mkdir /system/etc/init.d;
 fi
+chmod 755 /system/etc/init.d/*
+busybox run-parts /system/etc/init.d/
+
 
 # stop google service and restart it on boot. this remove high cpu load and ram leak!
 if [ "$($BB pidof com.google.android.gms | wc -l)" -eq "1" ]; then
