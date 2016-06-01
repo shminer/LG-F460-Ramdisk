@@ -300,5 +300,4 @@ if [ -e /data/.jz_sy/sharpening ] && [ ! -e /bootC ];then
     touch /bootC;
 fi
 # sharpe control
-
 exit;

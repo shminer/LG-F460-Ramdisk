@@ -90,6 +90,10 @@ cat << CTAG
 					action:"generic /sys/kernel/mm/ksm/sleep_millisecs"
 				}},'
 		fi`
+			{ SButton:{
+				label:"Drop caches immediately",
+				action:"drop_caches"
+			}},
 			{ SPane:{
 				title:"Virtual Memory",
 				description:"Tune the operation of the VM subsystem of the Linux kernel and the writeout of dirty data to disk. Swappiness also affects Z-RAM operation on kernels which support swaps."
