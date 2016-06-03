@@ -109,7 +109,7 @@ $BB echo "12288,15360,18432,21504,24576,30720" > /sys/module/lowmemorykiller/par
 $BB echo 32 > /sys/module/lowmemorykiller/parameters/cost
 
 # Adaptive LMK
-$BB echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+# $BB echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 $BB echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 
 # Process Reclaim
