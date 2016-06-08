@@ -73,15 +73,3 @@ on property:persist.service.odmevent.enable=true
 
 on property:persist.service.odm_app.enable=true
     start lg_odm_service2
-
-on post-fs-data
-
-service modem_debug_info /system/bin/sh /system/bin/modem_debug_info.sh
-	class late_start
-	user system
-	group system
-    disabled
-    oneshot
-
-on property:sys.boot_completed=1
-	start modem_debug_info

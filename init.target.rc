@@ -86,12 +86,6 @@ service qseecomd /system/bin/qseecomd
    user root
    group root
 
-# TODO: This MUST be disabled not use 'mpdecision' in LGE platform.
-service mpdecision /system/bin/mpdecision --avg_comp
-   class main
-   user root
-   disabled
-
 service thermal-engine /system/vendor/bin/thermal-engine
    class main
    user root
@@ -99,16 +93,6 @@ service thermal-engine /system/vendor/bin/thermal-engine
    socket thermal-recv-client stream 0660 system system
    socket thermal-recv-passive-client stream 0666 system system
    group root
-
-#  TODO: This MUST be disabled not use 'security-check1' in LGE platform.
-#service security-check1 /sbin/security_boot_check system
-#    class core
-#    oneshot
-
-# TODO: This MUST be disabled not use 'security-check2' in LGE platform.
-#service security-check2 /sbin/security_boot_check recovery
-#    class core
-#    oneshot
 
 service time_daemon /system/bin/time_daemon
    class late_start

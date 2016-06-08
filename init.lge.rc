@@ -179,11 +179,6 @@ service fidod /system/bin/fidod
     group system
 
 #Application Manager ENABLE_UNINSTALL
-service enable_uninstall  /system/vendor/bin/enable_uninstall.sh
-    disabled
-    oneshot
-
-#Application Manager ENABLE_UNINSTALL
 on property:vold.post_fs_data_done=1
     start enable_uninstall
 

@@ -3,12 +3,6 @@
 # to override this file (device specific .rc)
 import /init.${ro.hardware}_core.rc
 
-# LGE logger service rc
-import /init.lge.log.rc
-
-# LGE FM Radio rc
-import /init.lge.fm.rc
-
 on init
     mkdir /mpt 0755 system system
 
