@@ -32,7 +32,7 @@ import /init.lge.svelte.rc
 import /init.lge.bt_vendor.rc
 
 on post-fs-data
-    insmod /system/lib/modules/texfat.ko
+    insmod /system/lib/modules/exfat.ko
     write /proc/sys/vm/highmem_is_dirtyable 1
 
 # Enable slimport cbl isr after boot completion.
