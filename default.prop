@@ -1,10 +1,9 @@
 #
 # ADDITIONAL_DEFAULT_PROPERTIES
 #
-ro.adb.secure=0
-ro.secure=0
+ro.secure=1
 ro.allow.mock.location=0
-ro.debuggable=1
+ro.debuggable=0
 persist.sys.usb.config=mtp,adb
 ro.adb.secure=1
 ro.zygote=zygote32
@@ -20,4 +19,3 @@ debug.atrace.tags.enableflags=0
 ro.bootimage.build.date=Wed Dec 23 18:58:22 KST 2015
 ro.bootimage.build.date.utc=1450864702
 ro.bootimage.build.fingerprint=lge/tiger6_kt_kr/tiger6:6.0/MRA58K/15357183339be:user/release-keys
-
